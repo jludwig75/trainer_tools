@@ -26,7 +26,7 @@ from ant.easy.node import Node
 from ant.easy.channel import Channel
 from ant.base.message import Message
 
-from fan import Fan
+from devices.fan import FourSpeedRealayFan
 import logging
 import struct
 import threading
@@ -37,7 +37,7 @@ import time
 RANGE_MIN=0
 RANGE_MAX=1
 
-# one range for each gear
+# one range for each speed
 FAN_SPEED_RANGES = (
                     (0,100),    # 0 - off
                     (100,140),  # 1 - low
@@ -45,35 +45,35 @@ FAN_SPEED_RANGES = (
                     (160,300),  # 3 - high
                    )
 
-MIN_GEAR=0
-MAX_GEAR=len(FAN_SPEED_RANGES) - 1
+MIN_SPEED=0
+MAX_SPEED=len(FAN_SPEED_RANGES) - 1
 
 HEART_RATE_SWING = 5
 
 def set_fan_speed_from_hr(fan, bpm):
     if bpm > FAN_SPEED_RANGES[-1][RANGE_MAX]:
-        fan.select_gear(MAX_GEAR)
+        fan.select_speed(MAX_SPEED)
         return
     if bpm < FAN_SPEED_RANGES[0][RANGE_MIN]:
-        fan.select_gear(MIN_GEAR)
+        fan.select_speed(MIN_SPEED)
         return
-    gear = fan.current_gear
+    speed = fan.current_speed
     while True:
-        if bpm < FAN_SPEED_RANGES[gear][RANGE_MIN] - HEART_RATE_SWING:
-            gear -= 1
-        elif bpm > FAN_SPEED_RANGES[gear][RANGE_MAX] + HEART_RATE_SWING:
-            gear += 1
+        if bpm < FAN_SPEED_RANGES[speed][RANGE_MIN] - HEART_RATE_SWING:
+            speed -= 1
+        elif bpm > FAN_SPEED_RANGES[speed][RANGE_MAX] + HEART_RATE_SWING:
+            speed += 1
         else:
             break
-    assert gear >= MIN_GEAR and gear <= MAX_GEAR
-    fan.select_gear(gear)
+    assert speed >= MIN_SPEED and speed <= MAX_SPEED
+    fan.select_speed(speed)
 
 
 NETWORK_KEY= [0xb9, 0xa5, 0x21, 0xfb, 0xbd, 0x72, 0xc3, 0x45]
 
-fan = Fan()
-# Make sure the number of heart rate ranges matches the number of gears
-assert fan.max_gear() == MAX_GEAR
+fan = FourSpeedRealayFan(17, 2, 3, 4)
+# Make sure the number of heart rate ranges matches the number of speeds
+assert fan.max_speed == MAX_SPEED
 
 def on_data(data):
     heartrate = data[7]
