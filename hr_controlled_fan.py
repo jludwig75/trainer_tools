@@ -23,7 +23,6 @@ def main():
     fan = FourSpeedRealayFan(17, 2, 3, 4)
 
     node = AntPlusNode(NETWORK_KEY)
-    init_gpio()
     
     try:
         hrm = node.attach_hrm()

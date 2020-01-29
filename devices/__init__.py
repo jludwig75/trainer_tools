@@ -3,7 +3,8 @@ import RPi.GPIO as GPIO
 
 
 gpio_inited = False
-def init_gpio():
+def init_gpio(mode=GPIO.BCM):
+    global gpio_inited
     if not gpio_inited:
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(mode)
         gpio_inited = True

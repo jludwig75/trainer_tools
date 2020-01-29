@@ -1,9 +1,12 @@
 from __future__ import absolute_import, print_function
+
+from devices import init_gpio
 import RPi.GPIO as GPIO
 
 
 class FourSpeedRealayFan:
     def __init__(self, pin0, pin1, pin2, pin3):
+        init_gpio()
         self.current_speed = 0
         self._pin0 = pin0
         self._pin1 = pin1

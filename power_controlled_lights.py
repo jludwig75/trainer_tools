@@ -28,7 +28,6 @@ def main():
     color_strip = ColorStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ)
 
     node = AntPlusNode(NETWORK_KEY)
-    init_gpio()
     
     try:
         pwr_meter = node.attach_power_meter()

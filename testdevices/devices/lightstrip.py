@@ -1,5 +1,7 @@
 from __future__ import absolute_import, print_function
 
+from devices import init_gpio
+
 
 class RgbColor:
     def __init__(self, red, green, blue):
@@ -17,6 +19,7 @@ def get_color_strip_instance():
 
 class ColorStrip:
     def __init__(self, led_count, led_pin, led_freq):
+        init_gpio()
         global color_strip_instance
         self.current_color = RgbColor(0, 0, 0)
         color_strip_instance = self
