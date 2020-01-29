@@ -32,6 +32,6 @@ class ColorStrip:
     def set_color(self, color, wait_ms=0):
         """Wipe color across display a pixel at a time."""
         for i in range(self._strip.numPixels()):
-            self._strip.setPixelColor(i, Color(color.red, color.green, color.blue))
+            self._strip.setPixelColor(i, Color(color.green, color.red, color.blue))
             self._strip.show()
             # time.sleep(wait_ms/1000.0)
