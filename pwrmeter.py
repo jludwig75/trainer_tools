@@ -22,6 +22,8 @@ class AntPlusPowerMeter:
         self._channel.set_id(device_number, PWR_METER_DEVICE_TYPE, transfer_type)
     
     def _on_data(self, data):
+        if data[0] != 0x10:
+            return
         self._last_pwr = (int(data[7]) << 8) | int(data[6])
         self._last_pwr_time = time.time()
         if self.on_power_data != None:
