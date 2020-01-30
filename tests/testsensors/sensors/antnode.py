@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function
 
 hrm_instance = None
 def get_hrm_instance():
+    global hrm_instance
     return hrm_instance
 
 class TestHrm:
@@ -18,13 +19,13 @@ class TestHrm:
 
 pwr_meter_instance = None
 def get_pwr_meter_instance():
+    global pwr_meter_instance
     return pwr_meter_instance
 
 class TestPowerMeter:
     def __init__(self):
         global pwr_meter_instance
         self.on_power_data = None
-        global hrm_instance
         pwr_meter_instance = self
 
     def send_power_event(self, watts):

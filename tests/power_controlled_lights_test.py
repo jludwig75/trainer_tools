@@ -4,14 +4,15 @@ from __future__ import absolute_import, print_function
 import sys
 # This will fake out the ant and RPi modules so we
 # can test just the script and PowerLightController
+sys.path.insert(0, '..')
 sys.path.insert(0, 'testant')
 sys.path.insert(0, 'testrpi')
 sys.path.insert(0, 'testdevices')
-sys.path.insert(0, 'testantnode')
+sys.path.insert(0, 'testsensors')
 
 import unittest
 from devices.lightstrip import get_color_strip_instance, RgbColor
-from antnode import get_pwr_meter_instance
+from sensors.antnode import get_pwr_meter_instance
 
 from power_controlled_lights import main
 

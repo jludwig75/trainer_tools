@@ -5,6 +5,7 @@ from devices import init_gpio
 
 fan_instance = None
 def get_fan_instance():
+    global fan_instance
     return fan_instance
 
 class FourSpeedRealayFan:

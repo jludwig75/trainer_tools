@@ -4,14 +4,15 @@ from __future__ import absolute_import, print_function
 import sys
 # This will fake out the ant and RPi modules so we
 # can test just the Fan and set_fan_speed_from_hr.
+sys.path.insert(0, '..')
 sys.path.insert(0, 'testant')
 sys.path.insert(0, 'testrpi')
 sys.path.insert(0, 'testdevices')
-sys.path.insert(0, 'testantnode')
+sys.path.insert(0, 'testsensors')
 
 import unittest
 from devices.fan import get_fan_instance
-from antnode import get_hrm_instance
+from sensors.antnode import get_hrm_instance
 
 from hr_controlled_fan import main
 

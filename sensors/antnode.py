@@ -2,8 +2,9 @@ from __future__ import absolute_import, print_function
 
 from ant.easy.node import Node
 from ant.easy.channel import Channel
-from hrm import AntPlusHRM
-from pwrmeter import AntPlusPowerMeter
+
+from sensors.hrm import AntPlusHRM
+from sensors.pwrmeter import AntPlusPowerMeter
 
 
 class AntPlusNode:
