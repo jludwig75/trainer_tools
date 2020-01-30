@@ -4,15 +4,27 @@ from __future__ import absolute_import, print_function
 RANGE_MIN=0
 RANGE_MAX=1
 
+def build_hr_speed_ranges(low, medium, high):
+    assert low > 0 and medium > low and high > medium and medium < 300
+    return (
+            (0,      low),    # 0 - off
+            (low,    medium), # 1 - low
+            (medium, high),   # 2 - medium
+            (high,   300),    # 3 - high
+            )
+
 class HRFanController:
-    def __init__(self, cfg, hrm, fan, speed_ranges, range_swing = 5):
-        assert len(speed_ranges) <= fan.max_speed + 1 # Don't have to utilize all of the fan speeds, just the one we have ranges for
+    def __init__(self, cfg, hrm, fan, range_swing = 5):
+        low = cfg.getint('FanSpeedHeartRates', 'low')
+        medium = cfg.getint('FanSpeedHeartRates', 'medium')
+        high = cfg.getint('FanSpeedHeartRates', 'high')
+        self._speed_ranges = build_hr_speed_ranges(low, medium, high)
+        assert len(self._speed_ranges) <= fan.max_speed + 1 # Don't have to utilize all of the fan speeds, just the one we have ranges for
         self._hrm = hrm
         self._fan = fan
-        self._speed_ranges = speed_ranges
         self._range_swing = range_swing
         self._MIN_SPEED = 0
-        self._MAX_SPEED=len(speed_ranges) - 1
+        self._MAX_SPEED=len(self._speed_ranges) - 1
         self._hrm.on_heart_rate_data = self.on_hr_data
 
     def on_hr_data(self, heartrate, raw_data):

@@ -14,13 +14,6 @@ from pwrlightcontroller import PowerLightController
 
 NETWORK_KEY= [0xb9, 0xa5, 0x21, 0xfb, 0xbd, 0x72, 0xc3, 0x45]
 
-# one range for each speed
-FAN_SPEED_RANGES = (
-                    (0,100),    # 0 - off
-                    (100,140),  # 1 - low
-                    (140,160),  # 2 - medium
-                    (160,300),  # 3 - high
-                   )
 
 LED_COUNT      = 120      # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
@@ -39,7 +32,7 @@ def main():
     
     try:
         hrm = node.attach_hrm()
-        hfc = HRFanController(cfg, hrm, fan, FAN_SPEED_RANGES)
+        hfc = HRFanController(cfg, hrm, fan)
         pwr_meter = node.attach_power_meter()
         plc = PowerLightController(cfg, pwr_meter, color_strip)
         node.start()
