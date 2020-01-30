@@ -1,18 +1,31 @@
 from __future__ import absolute_import, print_function
 
+from devices.lightstrip import RgbColor
 
 RANGE_MIN=0
 RANGE_MAX=1
 COLOR_VALUE=2
 
+
+def build_power_ranges(ftp):
+    return (
+            (0,                  (60 * ftp) // 100,  RgbColor(0, 0, 0)),     # black
+            ((60 * ftp) // 100,  (75 * ftp) // 100,  RgbColor(0, 0, 255)),   # blue
+            ((75 * ftp) // 100,  (90 * ftp) // 100,  RgbColor(0, 255, 0)),   # green
+            ((90 * ftp) // 100,  (104 * ftp) // 100, RgbColor(255, 255, 0)), # yellow
+            ((105 * ftp) // 100, (120 * ftp) // 100, RgbColor(255, 165, 0)), # orange
+            ((105 * ftp) // 100, 10000,              RgbColor(255, 0, 0)),   # red
+           )
+
+
 class PowerLightController:
-    def __init__(self, power_meter, light_strip, power_ranges, range_swing = 5):
+    def __init__(self, cfg, power_meter, light_strip, range_swing = 2):
         self._power_meter = power_meter
         self._light_strip = light_strip
-        self._power_ranges = power_ranges
+        self._power_ranges = build_power_ranges(cfg.getint('Athlete', 'FTP'))
         self._range_swing = range_swing
         self._MIN_PWR_COLOR = 0
-        self._MAX_PWR_COLOR=len(power_ranges) - 1
+        self._MAX_PWR_COLOR=len(self._power_ranges) - 1
         self._power_meter.on_power_data = self.on_power_data
         self._current_color_level = 0
 

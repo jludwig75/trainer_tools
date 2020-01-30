@@ -2,6 +2,7 @@
 from __future__ import absolute_import, print_function
 
 import sys
+import ConfigParser
 
 from antnode import AntPlusNode
 from devices.lightstrip import ColorStrip, RgbColor
@@ -16,22 +17,18 @@ LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 
-# one range for each speed
-COLOR_POWER_RANGES = (
-                    (0,180, RgbColor(0, 0, 255)),       # blue
-                    (180,240, RgbColor(0, 255, 0)),     # green
-                    (240,320, RgbColor(255, 255, 0)),   # yellow
-                    (320,3000, RgbColor(255, 0, 0)),     # red
-                   )
 
 def main():
+    cfg = ConfigParser.RawConfigParser()
+    cfg.read('settings.cfg')
+
     color_strip = ColorStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ)
 
     node = AntPlusNode(NETWORK_KEY)
     
     try:
         pwr_meter = node.attach_power_meter()
-        plc = PowerLightController(pwr_meter, color_strip, COLOR_POWER_RANGES)
+        plc = PowerLightController(cfg, pwr_meter, color_strip)
         node.start()
     finally:
         node.stop()

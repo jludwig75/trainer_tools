@@ -5,7 +5,7 @@ RANGE_MIN=0
 RANGE_MAX=1
 
 class HRFanController:
-    def __init__(self, hrm, fan, speed_ranges, range_swing = 5):
+    def __init__(self, cfg, hrm, fan, speed_ranges, range_swing = 5):
         assert len(speed_ranges) <= fan.max_speed + 1 # Don't have to utilize all of the fan speeds, just the one we have ranges for
         self._hrm = hrm
         self._fan = fan
