@@ -5,6 +5,10 @@ from ant.easy.channel import Channel
 
 from sensors.hrm import AntPlusHRM
 from sensors.pwrmeter import AntPlusPowerMeter
+from sensors.speed import AntPlusSpeedSensor
+from sensors.cadence import AntPlusCadenceensor
+from sensors.speedandcadence import AntPlusSpeedAndCadenceSensor
+from sensors.combinedspeedandcadence import AntPlusCombinedSpeedAndCadenceSensors
 
 
 class AntPlusNode:
@@ -23,6 +27,31 @@ class AntPlusNode:
         pwr_meter = AntPlusPowerMeter(channel, device_number=device_number, transfer_type=transfer_type)
         channel.open()
         return pwr_meter
+
+    def attach_speed_sensor(self, wheel_circumference_meters, device_number = 0, transfer_type = 0):
+        channel = self.node.new_channel(Channel.Type.BIDIRECTIONAL_RECEIVE)
+        sensor = AntPlusSpeedSensor(channel, wheel_circumference_meters=wheel_circumference_meters, device_number=device_number, transfer_type=transfer_type)
+        channel.open()
+        return sensor
+
+    def attach_cadence_sensor(self, device_number = 0, transfer_type = 0):
+        channel = self.node.new_channel(Channel.Type.BIDIRECTIONAL_RECEIVE)
+        sensor = AntPlusCadenceSensor(channel, device_number=device_number, transfer_type=transfer_type)
+        channel.open()
+        return sensor
+
+    def attach_speed_and_cadence_sensor(self, wheel_circumference_meters, device_number = 0, transfer_type = 0):
+        channel = self.node.new_channel(Channel.Type.BIDIRECTIONAL_RECEIVE)
+        sensor = AntPlusSpeedAndCadenceSensor(channel, wheel_circumference_meters=wheel_circumference_meters, device_number=device_number, transfer_type=transfer_type)
+        channel.open()
+        return sensor
+
+    def attach_combined_speed_and_cadence_sensor(self, wheel_circumference_meters, device_number = 0, transfer_type = 0):
+        channel1 = self.node.new_channel(Channel.Type.BIDIRECTIONAL_RECEIVE)
+        channel2 = self.node.new_channel(Channel.Type.BIDIRECTIONAL_RECEIVE)
+        sensor = AntPlusCombinedSpeedAndCadenceSensors(channel1, channel2, wheel_circumference_meters=wheel_circumference_meters, device_number=device_number, transfer_type=transfer_type)
+        channel.open()
+        return sensor
 
     def start(self):
         self.node.start()
