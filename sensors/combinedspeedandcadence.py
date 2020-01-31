@@ -1,13 +1,15 @@
 from __future__ import absolute_import, print_function
 
 from sensors.speed import AntPlusSpeedSensor
-from sensors.cadence import AntPlusCadenceensor
+from sensors.cadence import AntPlusCadenceSensor
 
 
 class AntPlusCombinedSpeedAndCadenceSensors(object):
-    def __init__(self, channel1, channel2, wheel_circumference_meters, speed_device_number = 0, speed_transfer_type = 0, cadence_device_number = 0, cadence_transfer_type = 0):
+    def __init__(self, channel1, channel2, wheel_circumference_meters,
+                 speed_device_number = 0, speed_transfer_type = 0,
+                 cadence_device_number = 0, cadence_transfer_type = 0):
         self._speed_sensor = AntPlusSpeedSensor(channel1, wheel_circumference_meters, device_number=speed_device_number, transfer_type=speed_transfer_type)
-        self._cadence_sensor = AntPlusSpeedSensor(channel2, device_number=cadence_device_number, transfer_type=cadence_transfer_type)
+        self._cadence_sensor = AntPlusCadenceSensor(channel2, device_number=cadence_device_number, transfer_type=cadence_transfer_type)
 
     @property
     def on_speed_data(self):  # Just used so the setter will work

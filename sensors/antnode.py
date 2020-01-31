@@ -6,7 +6,7 @@ from ant.easy.channel import Channel
 from sensors.hrm import AntPlusHRM
 from sensors.pwrmeter import AntPlusPowerMeter
 from sensors.speed import AntPlusSpeedSensor
-from sensors.cadence import AntPlusCadenceensor
+from sensors.cadence import AntPlusCadenceSensor
 from sensors.speedandcadence import AntPlusSpeedAndCadenceSensor
 from sensors.combinedspeedandcadence import AntPlusCombinedSpeedAndCadenceSensors
 
@@ -46,11 +46,14 @@ class AntPlusNode:
         channel.open()
         return sensor
 
-    def attach_combined_speed_and_cadence_sensor(self, wheel_circumference_meters, device_number = 0, transfer_type = 0):
+    def attach_combined_speed_and_cadence_sensor(self, wheel_circumference_meters, speed_device_number = 0, speed_transfer_type = 0, cadence_device_number = 0, cadence_transfer_type = 0):
         channel1 = self.node.new_channel(Channel.Type.BIDIRECTIONAL_RECEIVE)
         channel2 = self.node.new_channel(Channel.Type.BIDIRECTIONAL_RECEIVE)
-        sensor = AntPlusCombinedSpeedAndCadenceSensors(channel1, channel2, wheel_circumference_meters=wheel_circumference_meters, device_number=device_number, transfer_type=transfer_type)
-        channel.open()
+        sensor = AntPlusCombinedSpeedAndCadenceSensors(channel1, channel2, wheel_circumference_meters=wheel_circumference_meters,
+                                                       speed_device_number=speed_device_number, speed_transfer_type=speed_transfer_type,
+                                                       cadence_device_number=cadence_device_number, cadence_transfer_type=cadence_transfer_type)
+        channel1.open()
+        channel2.open()
         return sensor
 
     def start(self):

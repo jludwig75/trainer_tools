@@ -10,7 +10,7 @@ CADENCE_SENSOR_TIMEOUT=12
 CADENCE_SENSOR_PERIOD=8102
 
 
-class AntPlusCadenceensor:
+class AntPlusCadenceSensor:
     def __init__(self, channel, device_number = 0, transfer_type = 0):
         self.on_cadence_data = None
         self._last_cadence = None
