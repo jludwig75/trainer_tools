@@ -2,6 +2,8 @@
 from __future__ import absolute_import, print_function
 
 import sys
+import ConfigParser
+
 # This will fake out the ant and RPi modules so we
 # can test just the Fan and set_fan_speed_from_hr.
 sys.path.insert(0, '..')
@@ -18,6 +20,16 @@ from hr_controlled_fan import main
 
 
 class hrm1Test(unittest.TestCase):
+    def setUp(self):
+        # Create a config file
+        config = ConfigParser.RawConfigParser()
+        config.add_section('FanSpeedHeartRates')
+        config.set('FanSpeedHeartRates', 'low', 100)
+        config.set('FanSpeedHeartRates', 'medium', 140)
+        config.set('FanSpeedHeartRates', 'high', 160)
+        with open('settings.cfg', 'wb') as configfile:
+            config.write(configfile)
+
     def test_0_bpm(self):
         main()
 

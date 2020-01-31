@@ -13,7 +13,7 @@ def build_power_ranges(ftp):
             ((59 * ftp) // 100,  (74 * ftp) // 100,  RgbColor(0, 0, 255)),     # blue
             ((75 * ftp) // 100,  (88 * ftp) // 100,  RgbColor(0, 255, 0)),     # green
             ((89 * ftp) // 100,  (103 * ftp) // 100, RgbColor(255, 255, 0)),   # yellow
-            ((104 * ftp) // 100, (117 * ftp) // 100, RgbColor(255, 165, 0)),   # orange
+            ((104 * ftp) // 100, (117 * ftp) // 100, RgbColor(255, 64, 0)),    # orange
             ((118 * ftp) // 100, 10000,              RgbColor(255, 0, 0)),     # red
            )
 
