@@ -76,7 +76,7 @@ class AntPlusCadenceSensor:
             self._last_cadence = 1024 * sub_u16(revolution_count - self._last_data[1]) / sub_u16(ts - self._last_data[0])
             self._last_cadence_time = time.time()
             if self.on_cadence_data != None:
-                self.on_cadence_data(cadence, data)
+                self.on_cadence_data(self._last_cadence, data)
         self._last_data = (ts, revolution_count)
 
     @property

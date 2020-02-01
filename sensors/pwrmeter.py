@@ -53,6 +53,7 @@ HRM_PERIOD=8182
 class AntPlusPowerMeter:
     def __init__(self, channel, device_number = 0, transfer_type = 0):
         self.on_power_data = None
+        self.on_cadence_data = None
         self._last_pwr = None
         self._last_pwr_time = None
         self._channel = channel
@@ -64,12 +65,15 @@ class AntPlusPowerMeter:
         self._channel.set_id(device_number, PWR_METER_DEVICE_TYPE, transfer_type)
     
     def _on_data(self, data):
-        if data[0] != 0x10:
-            return
-        self._last_pwr = (int(data[7]) << 8) | int(data[6])
-        self._last_pwr_time = time.time()
-        if self.on_power_data != None:
-            self.on_power_data(self._last_pwr, data)
+        if data[0] == 0x10:
+            self._last_pwr = (int(data[7]) << 8) | int(data[6])
+            self._last_pwr_time = time.time()
+            if self.on_power_data != None:
+                self.on_power_data(self._last_pwr, data)
+        if data[0] in [0x10, 0x11, 0x12]:
+            cadence = int(data[3])
+            if self.on_cadence_data != None:
+                self.on_cadence_data(cadence, data)
 
     @property
     def last_power_reading(self):
