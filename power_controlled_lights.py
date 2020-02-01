@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # MIT License
 
 # Copyright (c) 2020 Jonathan Ludwig, Michal Kozma
@@ -20,11 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-#!/usr/bin/env python
-from __future__ import absolute_import, print_function
-
 import sys
-import ConfigParser
+from configparser import ConfigParser
 
 from sensors.antnode import AntPlusNode
 from devices.lightstrip import ColorStrip, RgbColor
@@ -40,7 +38,7 @@ LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 
 
 def main():
-    cfg = ConfigParser.RawConfigParser()
+    cfg = ConfigParser()
     cfg.read('settings.cfg')
 
     color_strip = ColorStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ)

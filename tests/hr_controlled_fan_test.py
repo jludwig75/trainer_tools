@@ -1,8 +1,28 @@
-#!/usr/bin/env python
-from __future__ import absolute_import, print_function
+#!/usr/bin/env python3
+# MIT License
+
+# Copyright (c) 2020 Jonathan Ludwig
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 import sys
-import ConfigParser
+from configparser import ConfigParser
 
 # This will fake out the ant and RPi modules so we
 # can test just the Fan and set_fan_speed_from_hr.
@@ -22,12 +42,12 @@ from hr_controlled_fan import main
 class hrm1Test(unittest.TestCase):
     def setUp(self):
         # Create a config file
-        config = ConfigParser.RawConfigParser()
+        config = ConfigParser()
         config.add_section('FanSpeedHeartRates')
-        config.set('FanSpeedHeartRates', 'low', 100)
-        config.set('FanSpeedHeartRates', 'medium', 140)
-        config.set('FanSpeedHeartRates', 'high', 160)
-        with open('settings.cfg', 'wb') as configfile:
+        config.set('FanSpeedHeartRates', 'low', '100')
+        config.set('FanSpeedHeartRates', 'medium', '140')
+        config.set('FanSpeedHeartRates', 'high', '160')
+        with open('settings.cfg', 'wt') as configfile:
             config.write(configfile)
 
     def test_0_bpm(self):

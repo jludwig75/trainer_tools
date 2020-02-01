@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # MIT License
 
 # Copyright (c) 2020 Jonathan Ludwig
@@ -19,9 +20,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-#!/usr/bin/env python
-from __future__ import absolute_import, print_function
 
 import argparse
 
