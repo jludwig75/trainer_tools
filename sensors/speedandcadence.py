@@ -74,23 +74,21 @@ class AntPlusSpeedAndCadenceSensor:
         self._wheel_circumference = wheel_circumference_meters
 
     def _on_data(self, data):
-        if not data[0] in [0]:
-            return
         ts_speed = (data[5] << 8) | data[4]
         wheel_revolution_count = (data[7] << 8) | data[6]
         ts_cadence = (data[1] << 8) | data[0]
         crank_revolution_count = (data[3] << 8) | data[2]
-        if self._last_speed_data != None:
+        if self._last_speed_data != None and ts_speed != self._last_speed_data[TIME_IDX]:
             # Handle wrapping for 16-bits, otherwise, this value will be wildly off every 64 seconds or 64K revolutions (~138 km on 700x25C)
-            self._last_speed = self._wheel_circumference * 1024 * sub_u16(wheel_revolution_count - self._last_speed_data[REV_IDX]) / sub_u16(ts_speed - self._last_speed_data[TIME_IDX])
+            self._last_speed = self._wheel_circumference * 1024.0 * float(sub_u16(wheel_revolution_count, self._last_speed_data[REV_IDX])) / float(sub_u16(ts_speed, self._last_speed_data[TIME_IDX]))
             self._last_speed_time = time.time()
             if self.on_speed_data != None:
                 self.on_speed_data(self._last_speed, data)
         self._last_speed_data = (ts_speed, wheel_revolution_count)
-        if self._last_cadence_data != None:
+        if self._last_cadence_data != None and ts_cadence != self._last_cadence_data[TIME_IDX]:
             # Handle wrapping for 16-bits, otherwise, this value will be wildly off every 64 seconds or 64K revolutions (12 hours at 90 rpm)
-            self._last_cadence = 1024 * sub_u16(crank_revolution_count - self._last_cadence_data[REV_IDX]) / sub_u16(ts_cadence - self._last_cadence_data[TIME_IDX])
-            self._last_cadence = self._last_cadence // 60 # rps to rpm, also make an integer
+            self._last_cadence = 1024.0 * float(sub_u16(crank_revolution_count, self._last_cadence_data[REV_IDX])) / float(sub_u16(ts_cadence, self._last_cadence_data[TIME_IDX]))
+            self._last_cadence = self._last_cadence * 60 # rps to rpm, also make an integer
             self._last_cadence_time = time.time()
             if self.on_cadence_data != None:
                 self.on_cadence_data(self._last_cadence, data)

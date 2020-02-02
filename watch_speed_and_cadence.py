@@ -34,17 +34,13 @@ def mps_to_kph(mps):
 
 def print_cadence(cadence, data):
     string = 'Cadence: %u [RPM]' % cadence
-    sys.stdout.write(string)
-    sys.stdout.flush()
-    sys.stdout.write("\b" * len(string))
+    print(string)
 
 
 def print_speed(speed, data):
     # Convert speed from mps to kph
     string = 'Speed: %u [KPH]' % mps_to_kph(speed)
-    sys.stdout.write(string)
-    sys.stdout.flush()
-    sys.stdout.write("\b" * len(string))
+    print(string)
 
 
 def main():

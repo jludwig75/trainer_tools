@@ -73,7 +73,8 @@ class AntPlusCadenceSensor:
         revolution_count = (data[7] << 8) | data[6]
         if self._last_data != None:
             # Handle wrapping for 16-bits, otherwise, this value will be wildly off every 64 seconds or 64K revolutions (12 hours at 90 rpm)
-            self._last_cadence = 1024 * sub_u16(revolution_count - self._last_data[1]) / sub_u16(ts - self._last_data[0])
+            self._last_cadence = 1024.0 * float(sub_u16(revolution_count, self._last_data[1])) / float(sub_u16(ts, self._last_data[0]))
+            self._last_cadence = self._last_cadence * 60
             self._last_cadence_time = time.time()
             if self.on_cadence_data != None:
                 self.on_cadence_data(self._last_cadence, data)

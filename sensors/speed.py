@@ -74,7 +74,7 @@ class AntPlusSpeedSensor:
         revolution_count = (data[7] << 8) | data[6]
         if self._last_data != None:
             # Handle wrapping for 16-bits, otherwise, this value will be wildly off every 64 seconds or 64K revolutions (~138 km on 700x25C)
-            self._last_speed = self._wheel_circumference * 1024 * sub_u16(revolution_count - self._last_data[1]) / sub_u16(ts - self._last_data[0])
+            self._last_speed = self._wheel_circumference * 1024.0 * float(sub_u16(revolution_count, self._last_data[1])) / float(sub_u16(ts, self._last_data[0]))
             self._last_speed_time = time.time()
             if self.on_speed_data != None:
                 self.on_speed_data(speed, data)
