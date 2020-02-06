@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # MIT License
 
 # Copyright (c) 2020 Jonathan Ludwig, Michal Kozma
@@ -21,37 +20,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
-from configparser import ConfigParser
-
-from sensors.antnode import AntPlusNode
-from devices.lightstrip import ColorStrip, RgbColor
-from controllers.pwrlightcontroller import PowerLightController
+RANGE_MIN=0
+RANGE_MAX=1
+RANGE_VALUE=2
 
 
-NETWORK_KEY= [0xb9, 0xa5, 0x21, 0xfb, 0xbd, 0x72, 0xc3, 0x45]
+class RangedValueMapper:
+    def __init__(self, ranges, swing):
+        self._ranges = ranges
+        self._range_swing = swing
+        self._MIN_RANGE = 0
+        self._MAX_RANGE=len(self._ranges) - 1
+        self._current_index = 0
 
-LED_COUNT      = 120      # Number of LED pixels.
-LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
-#LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
-LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
-
-
-def main():
-    cfg = ConfigParser()
-    cfg.read('settings.cfg')
-
-    color_strip = ColorStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ)
-
-    node = AntPlusNode(NETWORK_KEY)
-    
-    try:
-        pwr_meter = node.attach_power_meter()
-        plc = PowerLightController(cfg, pwr_meter, color_strip)
-        node.start()
-    finally:
-        node.stop()
-        color_strip.set_strip_color(RgbColor(0, 0, 0), 10)
-
-if __name__ == "__main__":
-    main()
+    def map_value(self, input_value):
+        if input_value > self._ranges[-1][RANGE_MAX]:
+            self._current_index = self._MAX_RANGE
+        elif input_value < self._ranges[0][RANGE_MIN]:
+            self._current_index = self._MIN_RANGE
+        else:
+            while True:
+                if input_value < self._ranges[self._current_index][RANGE_MIN] - self._range_swing:
+                    self._current_index -= 1
+                elif input_value > self._ranges[self._current_index][RANGE_MAX] + self._range_swing:
+                    self._current_index += 1
+                else:
+                    break
+            assert self._current_index >= self._MIN_RANGE and self._current_index <= self._MAX_RANGE
+        return self._ranges[self._current_index][RANGE_VALUE]

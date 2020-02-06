@@ -50,10 +50,20 @@ class ColorStrip:
         # Intialize the library (must be called once before other functions).
         self._strip.begin()
 
+    @property
+    def pixel_count(self):
+        return self._strip.numPixels()
+
     # Define functions which animate LEDs in various ways.
-    def set_color(self, color, wait_ms=0):
+    def set_strip_color(self, color, wait_ms=0):
         """Wipe color across display a pixel at a time."""
         for i in range(self._strip.numPixels()):
             self._strip.setPixelColor(i, Color(color.green, color.red, color.blue))
             self._strip.show()
             # time.sleep(wait_ms/1000.0)
+    
+    def set_segment_color(self, start_pixel, pixel_count, color):
+        assert start_pixel + pixel_count <= self._strip.numPixels()
+        for i in range(start_pixel, start_pixel + pixel_count):
+            self._strip.setPixelColor(i, Color(color.green, color.red, color.blue))
+            self._strip.show()

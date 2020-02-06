@@ -24,5 +24,5 @@ class ColorStrip:
         self.current_color = RgbColor(0, 0, 0)
         color_strip_instance = self
 
-    def set_color(self, color, wait_ms=0):
+    def set_strip_color(self, color, wait_ms=0):
         self.current_color = color

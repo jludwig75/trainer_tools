@@ -57,10 +57,10 @@ class PowerLightController:
 
     def _set_light_strip_color_from_power(self, watts):
         if watts > self._power_ranges[-1][RANGE_MAX]:
-            self._light_strip.set_color(self._power_ranges[self._MAX_PWR_COLOR][COLOR_VALUE])
+            self._light_strip.set_strip_color(self._power_ranges[self._MAX_PWR_COLOR][COLOR_VALUE])
             return
         if watts < self._power_ranges[0][RANGE_MIN]:
-            self._light_strip.set_color(self._power_ranges[self._MIN_PWR_COLOR][COLOR_VALUE])
+            self._light_strip.set_strip_color(self._power_ranges[self._MIN_PWR_COLOR][COLOR_VALUE])
             return
         while True:
             if watts < self._power_ranges[self._current_color_level][RANGE_MIN] - self._range_swing:
@@ -70,4 +70,4 @@ class PowerLightController:
             else:
                 break
         assert self._current_color_level >= self._MIN_PWR_COLOR and self._current_color_level <= self._MAX_PWR_COLOR
-        self._light_strip.set_color(self._power_ranges[self._current_color_level][COLOR_VALUE])
+        self._light_strip.set_strip_color(self._power_ranges[self._current_color_level][COLOR_VALUE])
