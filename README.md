@@ -30,6 +30,7 @@ These scripts are written to run on Raspbian on a Raspberry Pi.
 Pre install. It might be a good idea to make sure your Raspbian instal is up-to-date:
 - sudo apt update
 - sudo apt upgrade
+- sudo reboot
 
 Install Steps
 ---
