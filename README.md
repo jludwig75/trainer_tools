@@ -23,6 +23,25 @@ The current interactions are currently available:
 - LED strip light color controlled by power meter with colors that match Zwift
     power range colors
 
+Installation
+===
+These scripts are written to run on Raspbian on a Raspberry Pi.
+
+Pre install. It might be a good idea to make sure your Raspbian instal is up-to-date:
+- sudo apt update
+- sudo apt upgrade
+
+Install Steps
+---
+- connect to shell on Raspberry Pi
+- sudo apt install -y git
+- git clone https://github.com/jludwig75/trainer_tools.git
+- cd trainer_tools
+- sudo ./setup.py
+
+Additional Information
+===
+
 The following interactions are being worked on:
 - Cadence to control a segment of an LED strip
 - Heart rate to control a segment of an LED strip
