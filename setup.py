@@ -57,7 +57,7 @@ class pip3Package(Package):
     def install(self):
         super().install_dependencies()
         print('  Installing "%s"...' % self.name)
-        os.system('apt install python3-pip')
+        os.system('apt install -y python3-pip')
 
 class pyusbPackage(Package):
     def __init__(self):
@@ -126,14 +126,17 @@ class rpi_gpioPackage(Package):
     def install(self):
         super().install_dependencies()
         print('  Installing "%s"...' % self.name)
-        os.system('apt install python3-rpi.gpio')
+        os.system('apt install -y python3-rpi.gpio')
 
 class neopixelPackage(Package):
     def __init__(self):
         super().__init__('neopixel')
+        self._installed = False
 
     @property
     def installed(self):
+        if self._installed:
+            return True
         if not super().dependencies_installed:
             return False
         try:
@@ -145,8 +148,7 @@ class neopixelPackage(Package):
     def install(self):
         super().install_dependencies()
         print('  Installing "%s"...' % self.name)
-        os.system('apt install python3-rpi.gpio')
-        os.system('apt-get install gcc make build-essential python-dev git scons swig')
+        os.system('apt-get install -y gcc make build-essential python-dev git scons swig')
         reboot = self._disbale_audio()
         os.system('git clone https://github.com/jgarff/rpi_ws281x')
         os.chdir('rpi_ws281x')
@@ -156,6 +158,7 @@ class neopixelPackage(Package):
         os.system('python3 setup.py install')
         os.chdir('../..')
         shutil.rmtree('rpi_ws281x')
+        self._installed = True
         if reboot:
             print('  !!! Please reboot the computer !!!')
 
@@ -165,7 +168,7 @@ class neopixelPackage(Package):
         return reboot_blacklist or reboot_disable
 
     def _blacklist_audio(self):
-        with open('/etc/modprobe.d/snd-blacklist.conf', 'at') as f:
+        with open('/etc/modprobe.d/snd-blacklist.conf', 'w+t') as f:
             for line in f:
                 if line.startswith('blacklist snd_bcm2835'):
                     # driver already blacklisted
@@ -218,3 +221,4 @@ class trainer_toolsPackage(Package):
 pkg = trainer_toolsPackage()
 
 pkg.install()
+
