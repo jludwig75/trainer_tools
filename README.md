@@ -39,6 +39,7 @@ Install Steps
 - git clone https://github.com/jludwig75/trainer_tools.git
 - cd trainer_tools
 - sudo ./setup.py
+- reboot if prompted
 
 Additional Information
 ===
