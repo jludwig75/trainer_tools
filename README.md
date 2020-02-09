@@ -41,6 +41,10 @@ Install Steps
 - sudo ./setup.py
 - reboot if prompted
 
+Wiring
+===
+![GitHub Logo](/wiring_diagram.png)
+
 Additional Information
 ===
 
