@@ -43,7 +43,7 @@ Install Steps
 
 Wiring
 ===
-![Wiring Diagram](/wiring_diagram.png)
+![Wiring Diagram](/wiring_diagram.jpg)
 
 Additional Information
 ===
