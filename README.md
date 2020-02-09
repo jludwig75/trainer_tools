@@ -43,7 +43,7 @@ Install Steps
 
 Wiring
 ===
-![GitHub Logo](/wiring_diagram.png)
+![Wiring Diagram](/wiring_diagram.png)
 
 Additional Information
 ===
