@@ -45,6 +45,12 @@ Wiring
 ===
 ![Wiring Diagram](/wiring_diagram.jpg)
 
+WARNING: Be very careful wiring the fan to the relay. It is high voltage. If you are not
+sure how to wire it, don't do it. Find someone to help you do it. It may be a
+good idea to rewire the fan with a cord with a ground wire in a grounded receptacle.
+If you add a ground wire, just make sure it is fastened with electrical contact
+to the metal chasis of the fan.
+
 Additional Information
 ===
 
