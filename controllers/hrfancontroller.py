@@ -22,6 +22,7 @@
 
 from __future__ import absolute_import, print_function
 
+import logging
 
 RANGE_MIN=0
 RANGE_MAX=1
@@ -50,7 +51,8 @@ class HRFanController:
         self._hrm.on_heart_rate_data = self.on_hr_data
 
     def on_hr_data(self, heartrate, raw_data):
-        print("Heartrate: " + str(heartrate) + " [BPM]")
+        message = "Heartrate: " + str(heartrate) + " [BPM]"
+        logging.info(message)
         self._set_fan_speed_from_hr(heartrate)
 
     def _set_fan_speed_from_hr(self, bpm):
@@ -69,4 +71,5 @@ class HRFanController:
             else:
                 break
         assert speed >= self._MIN_SPEED and speed <= self._MAX_SPEED
+        logging.debug('mapping heart rate %u bpm to fan speed %u' % (bpm, speed))
         self._fan.select_speed(speed)

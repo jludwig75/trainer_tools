@@ -22,7 +22,9 @@
 # SOFTWARE.
 
 import sys
+import logging
 from configparser import ConfigParser
+from scriptcommon import init_logging
 
 from sensors.antnode import AntPlusNode
 from devices.lightstrip import ColorStrip, RgbColor
@@ -38,19 +40,32 @@ LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 
 
 def main():
+    init_logging('power_controlled_lights.log')
+
+    logging.info('Reading settings configuration file')
     cfg = ConfigParser()
     cfg.read('settings.cfg')
 
+    logging.info('Initializing LED strip driver')
     color_strip = ColorStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ)
 
+    logging.info('Creating ANT+ node')
     node = AntPlusNode(NETWORK_KEY)
     
     try:
+        logging.info('Attaching ANT+ power meter')
         pwr_meter = node.attach_power_meter()
+        logging.info('Initializing power light controller')
         plc = PowerLightController(cfg, pwr_meter, color_strip)
+        logging.info('Starting ANT+ node')        
         node.start()
+    except Exception as e:
+        logging.error('Caught exception "%s"' % str(e))
+        raise
     finally:
+        logging.info('Stopping ANT+ node')
         node.stop()
+        logging.info('Turning off LED strip')
         color_strip.set_color(RgbColor(0, 0, 0), 10)
 
 if __name__ == "__main__":

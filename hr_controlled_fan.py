@@ -22,7 +22,9 @@
 # SOFTWARE.
 
 import sys
+import logging
 from configparser import ConfigParser
+from scriptcommon import init_logging
 
 from sensors.antnode import AntPlusNode
 from devices.fan import FourSpeedRealayFan
@@ -32,18 +34,30 @@ from controllers.hrfancontroller import HRFanController
 NETWORK_KEY= [0xb9, 0xa5, 0x21, 0xfb, 0xbd, 0x72, 0xc3, 0x45]
 
 def main():
+    init_logging('hr_controlled_fan.log')
+
+    logging.info('Reading settings configuration file')
     cfg = ConfigParser()
     cfg.read('settings.cfg')
 
+    logging.info('Initializing fan driver')
     fan = FourSpeedRealayFan(17, 2, 3, 4)
 
+    logging.info('Creating ANT+ node')
     node = AntPlusNode(NETWORK_KEY)
     
     try:
+        logging.info('Attaching ANT+ heart rate monitor')
         hrm = node.attach_hrm()
+        logging.info('Initializing heart rate fan controller')
         hfc = HRFanController(cfg, hrm, fan)
+        logging.info('Starting ANT+ node')        
         node.start()
+    except Exception as e:
+        logging.error('Caught exception "%s"' % str(e))
+        raise
     finally:
+        logging.info('Stopping ANT+ node')
         node.stop()
 
 if __name__ == "__main__":

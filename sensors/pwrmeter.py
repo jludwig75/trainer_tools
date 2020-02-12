@@ -43,6 +43,8 @@
 from __future__ import absolute_import, print_function
 
 import time
+import logging
+from sensors.internal import dump_data
 
 
 ANT_PLUS_FREQUENCY=57
@@ -65,6 +67,7 @@ class AntPlusPowerMeter:
         self._channel.set_id(device_number, PWR_METER_DEVICE_TYPE, transfer_type)
     
     def _on_data(self, data):
+        logging.debug('Power meter received data %s' % dump_data(data))
         if data[0] == 0x10:
             self._last_pwr = (int(data[7]) << 8) | int(data[6])
             self._last_pwr_time = time.time()

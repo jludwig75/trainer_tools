@@ -43,7 +43,9 @@
 from __future__ import absolute_import, print_function
 
 import time
+import logging
 from sensors.internal import sub_u16
+from sensors.internal import dump_data
 
 
 ANT_PLUS_FREQUENCY=57
@@ -68,6 +70,7 @@ class AntPlusSpeedSensor:
         self._wheel_circumference = wheel_circumference_meters
 
     def _on_data(self, data):
+        logging.debug('Speed sensor received data %s' % dump_data(data))
         if not data[0] in [0, 1, 2, 3, 4, 5]:
             return
         ts = (data[5] << 8) | data[4]
@@ -77,7 +80,8 @@ class AntPlusSpeedSensor:
             self._last_speed = self._wheel_circumference * 1024.0 * float(sub_u16(revolution_count, self._last_data[1])) / float(sub_u16(ts, self._last_data[0]))
             self._last_speed_time = time.time()
             if self.on_speed_data != None:
-                self.on_speed_data(speed, data)
+                logging.debug('reporting speed %u m/s' % self._last_speed)
+                self.on_speed_data(self._last_speed, data)
         self._last_data = (ts, revolution_count)
 
     # speed is m/s
