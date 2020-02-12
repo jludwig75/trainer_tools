@@ -25,3 +25,8 @@ def sub_u16(a, b):
         a += 2**16
     return a - b
 
+def dump_data(data):
+    byte_strs = []
+    for b in data:
+        byte_strs.append('0x' + hex(int(b)))
+    return ','.join(byte_strs)

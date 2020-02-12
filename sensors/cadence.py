@@ -43,7 +43,9 @@
 from __future__ import absolute_import, print_function
 
 import time
+import logging
 from sensors.internal import sub_u16
+from sensors.internal import dump_data
 
 
 ANT_PLUS_FREQUENCY=57
@@ -67,6 +69,7 @@ class AntPlusCadenceSensor:
         self._last_data = None
 
     def _on_data(self, data):
+        logging.debug('Cadence sensor received data %s' % dump_data(data))
         if not data[0] in [0, 1, 2, 3, 4, 5]:
             return
         ts = (data[5] << 8) | data[4]
@@ -77,6 +80,7 @@ class AntPlusCadenceSensor:
             self._last_cadence = self._last_cadence * 60
             self._last_cadence_time = time.time()
             if self.on_cadence_data != None:
+                logging.debug('reporting cadence %u' % self._last_cadence)
                 self.on_cadence_data(self._last_cadence, data)
         self._last_data = (ts, revolution_count)
 

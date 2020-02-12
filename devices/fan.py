@@ -24,6 +24,7 @@ from __future__ import absolute_import, print_function
 
 from devices import init_gpio
 import RPi.GPIO as GPIO
+import logging
 
 
 class FourSpeedRealayFan:
@@ -41,7 +42,11 @@ class FourSpeedRealayFan:
             GPIO.output(i, GPIO.HIGH)
 
     def select_speed(self, speed):
+        if self.current_speed == speed:
+            # No change
+            return
         assert speed >= 0 and speed <= 3
+        logging.info('setting fan speed to %u' % speed)
         if speed == 0:
             GPIO.output(self._pin3, GPIO.HIGH)
             GPIO.output(self._pin2, GPIO.HIGH)
@@ -58,6 +63,7 @@ class FourSpeedRealayFan:
             GPIO.output(self._pin3, GPIO.LOW)
             GPIO.output(self._pin2, GPIO.HIGH)
             GPIO.output(self._pin1, GPIO.HIGH)
+        logging.debug('fan speed set to %u' % speed)
         self.current_speed = speed
 
     @property

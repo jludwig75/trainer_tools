@@ -44,6 +44,8 @@ from __future__ import absolute_import, print_function
 
 import time
 from sensors.internal import sub_u16
+import logging
+from sensors.internal import dump_data
 
 
 ANT_PLUS_FREQUENCY=57
@@ -74,6 +76,7 @@ class AntPlusSpeedAndCadenceSensor:
         self._wheel_circumference = wheel_circumference_meters
 
     def _on_data(self, data):
+        logging.debug('Speed and cadence sensor received data %s' % dump_data(data))
         ts_speed = (data[5] << 8) | data[4]
         wheel_revolution_count = (data[7] << 8) | data[6]
         ts_cadence = (data[1] << 8) | data[0]
@@ -83,6 +86,7 @@ class AntPlusSpeedAndCadenceSensor:
             self._last_speed = self._wheel_circumference * 1024.0 * float(sub_u16(wheel_revolution_count, self._last_speed_data[REV_IDX])) / float(sub_u16(ts_speed, self._last_speed_data[TIME_IDX]))
             self._last_speed_time = time.time()
             if self.on_speed_data != None:
+                logging.debug('reporting speed %u m/s' % self._last_speed)
                 self.on_speed_data(self._last_speed, data)
         self._last_speed_data = (ts_speed, wheel_revolution_count)
         if self._last_cadence_data != None and ts_cadence != self._last_cadence_data[TIME_IDX]:
@@ -91,6 +95,7 @@ class AntPlusSpeedAndCadenceSensor:
             self._last_cadence = self._last_cadence * 60 # rps to rpm, also make an integer
             self._last_cadence_time = time.time()
             if self.on_cadence_data != None:
+                logging.debug('reporting cadence %u' % self._last_cadence)
                 self.on_cadence_data(self._last_cadence, data)
         self._last_cadence_data = (ts_cadence, crank_revolution_count)
 

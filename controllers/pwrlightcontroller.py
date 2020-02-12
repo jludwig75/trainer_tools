@@ -23,6 +23,8 @@
 from __future__ import absolute_import, print_function
 
 from devices.lightstrip import RgbColor
+import logging
+
 
 RANGE_MIN=0
 RANGE_MAX=1
@@ -52,7 +54,8 @@ class PowerLightController:
         self._current_color_level = 0
 
     def on_power_data(self, watts, raw_data):
-        print("Power: " + str(watts) + " [Watts]")
+        message = "Power: " + str(watts) + " [Watts]"
+        logging.info(message)
         self._set_light_strip_color_from_power(watts)
 
     def _set_light_strip_color_from_power(self, watts):
@@ -70,4 +73,6 @@ class PowerLightController:
             else:
                 break
         assert self._current_color_level >= self._MIN_PWR_COLOR and self._current_color_level <= self._MAX_PWR_COLOR
-        self._light_strip.set_color(self._power_ranges[self._current_color_level][COLOR_VALUE])
+        new_color = self._power_ranges[self._current_color_level][COLOR_VALUE]
+        logging.debug('Mapping power %uW to color (%u,%u,%u)' % (watts, new_color.red, new_color.green, new_color.blue))
+        self._light_strip.set_color(new_color)
