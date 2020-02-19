@@ -217,6 +217,10 @@ class trainer_toolsPackage(Package):
         print('Installing trainer_tools dependencies...')
         os.system('apt-get update')
         super().install_dependencies()
+        self._copy_settings_files()
+    
+    def _copy_settings_files(self):
+        shutil.copy('settings.cfg.template', 'settings.cfg')
 
 pkg = trainer_toolsPackage()
 
