@@ -1,0 +1,8 @@
+[Fan]
+speed1pin=2
+speed2pin=3
+speed3pin=4
+on_logic=low
+
+[LightStrip]
+pin=18

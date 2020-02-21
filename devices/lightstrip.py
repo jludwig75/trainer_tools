@@ -44,12 +44,12 @@ LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 
 class ColorStrip:
-    def __init__(self, led_count, led_pin, led_freq):
+    def __init__(self, device_cfg, led_count, led_freq):
         self._current_color = RgbColor(0, 0, 0)
         init_gpio()
         # Create NeoPixel object with appropriate configuration.
         logging.info('Initializing Neopixel driver')
-        self._strip = Adafruit_NeoPixel(led_count, led_pin, led_freq, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
+        self._strip = Adafruit_NeoPixel(led_count, device_cfg.getint('LightStrip', 'pin'), led_freq, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
         # Intialize the library (must be called once before other functions).
         self._strip.begin()
 

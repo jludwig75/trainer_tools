@@ -1,3 +1,4 @@
 *.pyc
 settings.cfg
+device_settings.cfg
 *.log

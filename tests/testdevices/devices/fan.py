@@ -9,7 +9,7 @@ def get_fan_instance():
     return fan_instance
 
 class FourSpeedRealayFan:
-    def __init__(self, pin0, pin1, pin2, pin3):
+    def __init__(self, device_cfg):
         init_gpio()
         global fan_instance
         self.current_speed = 0

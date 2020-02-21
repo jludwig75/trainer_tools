@@ -34,8 +34,6 @@ from controllers.pwrlightcontroller import PowerLightController
 NETWORK_KEY= [0xb9, 0xa5, 0x21, 0xfb, 0xbd, 0x72, 0xc3, 0x45]
 
 LED_COUNT      = 120      # Number of LED pixels.
-LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
-#LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 
 
@@ -46,8 +44,11 @@ def main():
     cfg = ConfigParser()
     cfg.read('settings.cfg')
 
+    device_cfg = ConfigParser()
+    device_cfg.read('device_settings.cfg')
+
     logging.info('Initializing LED strip driver')
-    color_strip = ColorStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ)
+    color_strip = ColorStrip(device_cfg, LED_COUNT, LED_FREQ_HZ)
 
     logging.info('Creating ANT+ node')
     node = AntPlusNode(NETWORK_KEY)

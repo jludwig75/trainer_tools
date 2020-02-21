@@ -40,8 +40,11 @@ def main():
     cfg = ConfigParser()
     cfg.read('settings.cfg')
 
+    device_cfg = ConfigParser()
+    device_cfg.read('device_settings.cfg')
+
     logging.info('Initializing fan driver')
-    fan = FourSpeedRealayFan(17, 2, 3, 4)
+    fan = FourSpeedRealayFan(device_cfg)
 
     logging.info('Creating ANT+ node')
     node = AntPlusNode(NETWORK_KEY)

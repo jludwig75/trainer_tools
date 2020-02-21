@@ -50,6 +50,14 @@ class hrm1Test(unittest.TestCase):
         with open('settings.cfg', 'wt') as configfile:
             config.write(configfile)
 
+        device_config = ConfigParser()
+        device_config.add_section('Fan')
+        device_config.set('Fan', 'speed1pin', '2')
+        device_config.set('Fan', 'speed2pin', '3')
+        device_config.set('Fan', 'speed3pin', '4')
+        with open('device_settings.cfg', 'wt') as configfile:
+            config.write(configfile)
+
     def test_0_bpm(self):
         main()
 

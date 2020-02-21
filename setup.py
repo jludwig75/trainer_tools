@@ -215,14 +215,20 @@ class trainer_toolsPackage(Package):
 
     def install(self):
         print('Installing trainer_tools dependencies...')
-        # os.system('apt-get update')
-        # super().install_dependencies()
+        os.system('apt-get update')
+        super().install_dependencies()
         self._copy_settings_files()
     
     def _copy_settings_files(self):
-        shutil.copy('settings.cfg.template', 'settings.cfg')
+        print('Setting up config files...')
+        self._copy_settings_file('settings.cfg')
+        self._copy_settings_file('device_settings.cfg')
+
+    def _copy_settings_file(self, file_name):
+        shutil.copy('%s.template' % file_name, file_name)
         stat = os.stat('setup.py')
-        os.chown('settings.cfg', stat.st_uid, stat.st_gid)
+        os.chown(file_name, stat.st_uid, stat.st_gid)
+
 
 pkg = trainer_toolsPackage()
 
