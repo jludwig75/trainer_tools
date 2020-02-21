@@ -72,10 +72,12 @@ def main():
         logging.error('Caught exception "%s"' % str(e))
         raise
     finally:
-        logging.info('Stopping ANT+ node')
-        node.stop()
+        logging.info('Turning off fan')
+        fan.select_speed(0)
         logging.info('Turning off LED strip')
         color_strip.set_color(RgbColor(0, 0, 0), 10)
+        logging.info('Stopping ANT+ node')
+        node.stop()
 
 if __name__ == "__main__":
     main()

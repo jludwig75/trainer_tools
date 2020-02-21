@@ -60,6 +60,8 @@ def main():
         logging.error('Caught exception "%s"' % str(e))
         raise
     finally:
+        logging.info('Turning off fan')
+        fan.select_speed(0)
         logging.info('Stopping ANT+ node')
         node.stop()
 
