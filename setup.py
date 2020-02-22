@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 import shutil
-
+import pwd
 
 class Package:
     def __init__(self, name):
@@ -218,6 +218,7 @@ class trainer_toolsPackage(Package):
         os.system('apt-get update')
         super().install_dependencies()
         self._copy_settings_files()
+        self._install_service()
     
     def _copy_settings_files(self):
         print('Setting up config files...')
@@ -226,9 +227,33 @@ class trainer_toolsPackage(Package):
 
     def _copy_settings_file(self, file_name):
         shutil.copy('%s.template' % file_name, file_name)
-        stat = os.stat('setup.py')
-        os.chown(file_name, stat.st_uid, stat.st_gid)
+        os.chown(file_name, self._get_install_uid(), self._get_install_gid())
 
+    def _install_service(self):
+        self._create_service_file()
+        self._enable_serice()
+
+    def _create_service_file(self):
+        with open('trainer_tools.service', 'rt') as f:
+            file_data = f.read()
+        file_data = file_data.replace('{USER_NAME}', self._get_install_user_name()).replace('{INSTALL_DIR}', os.getcwd())
+        with open('/lib/systemd/system/trainer_tools.service', 'wt') as f:
+            f.write(file_data)
+
+    def _get_install_uid(self):
+        stat = os.stat('setup.py')
+        return stat.st_uid
+
+    def _get_install_gid(self):
+        stat = os.stat('setup.py')
+        return stat.st_gid
+
+    def _get_install_user_name(self):
+        return pwd.getpwuid(self._get_install_uid()).pw_name
+
+    def _enable_serice(self):
+        os.system('systemctl daemon-reload')
+        os.system('systemctl enable trainer_tools.service')
 
 pkg = trainer_toolsPackage()
 
