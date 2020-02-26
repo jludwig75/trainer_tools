@@ -9,7 +9,7 @@ Restart=always
 RestartSec=1
 User={USER_NAME}
 WorkingDirectory={INSTALL_DIR}
-ExecStart=/usr/bin/env python3 {INSTALL_DIR}/start_script
+ExecStart=/bin/bash {INSTALL_DIR}/run_script
 
 [Install]
 WantedBy=multi-user.target

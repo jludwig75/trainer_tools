@@ -53,7 +53,7 @@ def main():
         logging.info('Attaching ANT+ heart rate monitor')
         hrm = node.attach_hrm()
         logging.info('Initializing heart rate fan controller')
-        hfc = HRFanController(cfg, hrm, fan)
+        hfc = HRFanController(node.stop, cfg, hrm, fan)
         logging.info('Starting ANT+ node')        
         node.start()
     except Exception as e:

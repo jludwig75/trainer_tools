@@ -38,7 +38,8 @@ def build_hr_speed_ranges(low, medium, high):
             )
 
 class HRFanController:
-    def __init__(self, cfg, hrm, fan, range_swing = 5):
+    def __init__(self, request_reset, cfg, hrm, fan, range_swing = 5):
+        logging.info('Initializing HRFanController')
         low = cfg.getint('FanSpeedHeartRates', 'low')
         medium = cfg.getint('FanSpeedHeartRates', 'medium')
         high = cfg.getint('FanSpeedHeartRates', 'high')
@@ -50,14 +51,34 @@ class HRFanController:
         self._MIN_SPEED = 0
         self._MAX_SPEED=len(self._speed_ranges) - 1
         self._hrm.on_heart_rate_data = self.on_hr_data
-        self._timer = None
-        self._reset_timer()
+        self._fan_speed_timer = None
+        self._restart_timer = None
+        self._request_reset = request_reset
+        self._reset_fan_speed_timer()
+        self._reset_restart_timer()
 
-    def _reset_timer(self):
-        if self._timer != None:
-            self._timer.cancel()
-        self._timer = threading.Timer(15, self._drop_fan_speed)
-        self._timer.start()
+    def _reset_fan_speed_timer(self):
+        if self._fan_speed_timer != None:
+            self._fan_speed_timer.cancel()
+        self._fan_speed_timer = threading.Timer(15, self._drop_fan_speed)
+        self._fan_speed_timer.start()
+
+    def _drop_fan_speed(self):
+        logging.debug("no signal from fan after timeout period")
+        if self._fan.current_speed > 1:
+            logging.info("Heart rate monitor signal lost. Dropping fan speed to speed 1")
+            self._fan.select_speed(1)
+
+    def _reset_restart_timer(self):
+        if self._restart_timer != None:
+            self._restart_timer.cancel()
+        logging.info('setting restart timer')
+        self._restart_timer = threading.Timer(30, self._request_restart)
+        self._restart_timer.start()
+    
+    def _request_restart(self):
+        logging.info('Requesting restart')
+        self._request_reset()
 
     def _drop_fan_speed(self):
         logging.debug("no signal from fan after timeout period")
@@ -66,10 +87,11 @@ class HRFanController:
             self._fan.select_speed(1)
 
     def on_hr_data(self, heartrate, raw_data):
-        self._reset_timer()
+        self._reset_fan_speed_timer()
         message = "Heartrate: " + str(heartrate) + " [BPM]"
         logging.info(message)
         self._set_fan_speed_from_hr(heartrate)
+        self._reset_restart_timer()
 
     def _set_fan_speed_from_hr(self, bpm):
         if bpm > self._speed_ranges[-1][RANGE_MAX]:
