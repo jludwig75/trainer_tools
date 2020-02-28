@@ -214,12 +214,24 @@ class trainer_toolsPackage(Package):
         print('Packages configured')
 
     def install(self):
-        print('Installing trainer_tools dependencies...')
-        os.system('apt-get update')
-        super().install_dependencies()
-        self._copy_settings_files()
-        self._install_service()
+        self._do_system_install()
+        self._do_user_install()
     
+    def _do_system_install(self):
+        os.system('apt-get update')
+        print('Installing trainer_tools dependencies...')
+        super().install_dependencies()
+        self._install_service()
+
+    def _switch_to_install_user(self):
+        os.setgid(self._get_install_gid())
+        os.setuid(self._get_install_uid())
+
+    def _do_user_install(self):
+        self._switch_to_install_user()
+        self._copy_settings_files()
+        self._set_start_script()
+
     def _copy_settings_files(self):
         print('Setting up config files...')
         self._copy_settings_file('settings.cfg')
@@ -227,7 +239,6 @@ class trainer_toolsPackage(Package):
 
     def _copy_settings_file(self, file_name):
         shutil.copy('%s.template' % file_name, file_name)
-        os.chown(file_name, self._get_install_uid(), self._get_install_gid())
 
     def _install_service(self):
         self._create_service_file()
@@ -254,6 +265,35 @@ class trainer_toolsPackage(Package):
     def _enable_serice(self):
         os.system('systemctl daemon-reload')
         os.system('systemctl enable trainer_tools.service')
+
+    def _set_start_script(self):
+        while True:
+            print('Start-up modes')
+            print(' 1 - Controll fan speed by heart rate')
+            print(' 2 - Control lights by power')
+            print(' 3 - Both')
+            print('Select mode: ', end='')
+            option = input()
+            try:
+                option = int(option)
+            except:
+                print('%s is not a valid option' % option)
+                continue
+            if option < 1 or option > 3:
+                print('%u is not a valid option' % option)
+                continue
+            break
+        assert option >= 1 and option <= 3
+        if os.path.exists('start_script'):
+            os.unlink('start_script')
+        if option == 1:
+            os.symlink('hr_controlled_fan.py', 'start_script')
+        elif option == 2:
+            os.symlink('power_controlled_lights.py', 'start_script')
+        elif option == 3:
+            os.symlink('control_fan_and_lights.py', 'start_script')
+        # os.chown('start_script', self._get_install_uid(), self._get_install_gid())
+
 
 pkg = trainer_toolsPackage()
 
