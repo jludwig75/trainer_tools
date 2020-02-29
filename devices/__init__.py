@@ -28,5 +28,6 @@ gpio_inited = False
 def init_gpio(mode=GPIO.BCM):
     global gpio_inited
     if not gpio_inited:
+        GPIO.setwarnings(False)
         GPIO.setmode(mode)
         gpio_inited = True

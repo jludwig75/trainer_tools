@@ -57,7 +57,7 @@ def main():
         logging.info('Attaching ANT+ power meter')
         pwr_meter = node.attach_power_meter()
         logging.info('Initializing power light controller')
-        plc = PowerLightController(cfg, pwr_meter, color_strip)
+        plc = PowerLightController(node.stop, None, cfg, pwr_meter, color_strip)
         logging.info('Starting ANT+ node')        
         node.start()
     except Exception as e:

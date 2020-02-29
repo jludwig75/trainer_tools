@@ -39,6 +39,30 @@ NETWORK_KEY= [0xb9, 0xa5, 0x21, 0xfb, 0xbd, 0x72, 0xc3, 0x45]
 LED_COUNT      = 120      # Number of LED pixels.
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 
+class TwoClientNodeStopper:
+    def __init__(self, node):
+        self._node = node
+        self._stop_client1 = False
+        self._stop_client2 = False
+    
+    def _handle_stop(self):
+        if self._stop_client1 and self._stop_client2:
+            self._node.stop()
+
+    def stop_client1(self):
+        self._stop_client1 = True
+        self._handle_stop()
+    
+    def stop_client2(self):
+        self._stop_client2 = True
+        self._handle_stop()
+
+    def cancel_stop_client1(self):
+        self._stop_client1 = False
+
+    def cancel_stop_client2(self):
+        self._stop_client2 = False
+
 def main():
     init_logging('control_fan_and_lights.log')
 
@@ -58,14 +82,15 @@ def main():
     node = AntPlusNode(NETWORK_KEY)
     
     try:
+        node_stopper = TwoClientNodeStopper(node)
         logging.info('Attaching ANT+ heart rate monitor')
         hrm = node.attach_hrm()
         logging.info('Initializing heart rate fan controller')
-        hfc = HRFanController(cfg, hrm, fan)
+        hfc = HRFanController(node_stopper.stop_client1, node_stopper.cancel_stop_client1, cfg, hrm, fan)
         logging.info('Attaching ANT+ power meter')
         pwr_meter = node.attach_power_meter()
         logging.info('Initializing power light controller')
-        plc = PowerLightController(cfg, pwr_meter, color_strip)
+        plc = PowerLightController(node_stopper.stop_client2, node_stopper.cancel_stop_client2, cfg, pwr_meter, color_strip)
         logging.info('Starting ANT+ node')        
         node.start()
     except Exception as e:

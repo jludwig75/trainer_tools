@@ -24,6 +24,7 @@ from __future__ import absolute_import, print_function
 
 from devices.lightstrip import RgbColor
 import logging
+from controllers import Controller
 
 
 RANGE_MIN=0
@@ -42,8 +43,9 @@ def build_power_ranges(ftp):
            )
 
 
-class PowerLightController:
-    def __init__(self, cfg, power_meter, light_strip, range_swing = 2):
+class PowerLightController(Controller):
+    def __init__(self, request_reset, cancel_reset, cfg, power_meter, light_strip, range_swing = 2):
+        super().__init__(request_reset, cancel_reset)
         self._power_meter = power_meter
         self._light_strip = light_strip
         self._power_ranges = build_power_ranges(cfg.getint('Athlete', 'FTP'))
@@ -54,6 +56,7 @@ class PowerLightController:
         self._current_color_level = 0
 
     def on_power_data(self, watts, raw_data):
+        self._reset_restart_timer()
         message = "Power: " + str(watts) + " [Watts]"
         logging.info(message)
         self._set_light_strip_color_from_power(watts)
