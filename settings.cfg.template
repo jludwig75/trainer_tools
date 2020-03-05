@@ -1,3 +1,6 @@
+[Main]
+version=1
+
 [FanSpeedHeartRates]
 low=100
 medium=140

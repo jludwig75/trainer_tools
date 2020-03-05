@@ -3,3 +3,4 @@ settings.cfg
 device_settings.cfg
 *.log
 start_script
+*settings.cfg.backup

@@ -1,3 +1,6 @@
+[Main]
+version=1
+
 [Fan]
 speed1pin=2
 speed2pin=3
@@ -6,3 +9,4 @@ on_logic=low
 
 [LightStrip]
 pin=18
+led_count=120
