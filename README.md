@@ -39,7 +39,9 @@ Install Steps
 - git clone https://github.com/jludwig75/trainer_tools.git
 - cd trainer_tools
 - sudo ./setup.py
-- reboot if prompted
+- Edit settings.cfg to set the correct athlete settings
+- Edit device_settings.cfg for the correct hardware settings
+- sudo reboot
 
 Wiring
 ===
