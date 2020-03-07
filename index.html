@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
+        <script>
+            $( function() {
+              $( "#tabs" ).tabs();
+            } );
+            function setup_field_form(field_name, data_path) {
+                $("#" + field_name + "_edit").hide();
+                $("#" + field_name + "_error").hide();
+                $("#" + field_name + "_show").load(data_path + field_name, function() {
+                    $("#" + field_name + "_show").click(function(){
+                        var val = $("#" + field_name + "_show").text();
+                        $("#" + field_name + "_show").hide();
+                        $("#" + field_name + "_edit").show();
+                        $("#" + field_name + "_input").val(val);
+                        $("#" + field_name + "_input").focus();
+                        $("#" + field_name + "_input").select();
+                        $("#" + field_name + "_cancel").click(function(){
+                            $("#" + field_name + "_edit").hide();
+                            $("#" + field_name + "_show").show();
+                            $("#" + field_name + "_error").hide();
+                        });
+                        $("#" + field_name).ajaxForm({
+                            success: function() {
+                                $("#" + field_name + "_edit").hide();
+                                $("#" + field_name + "_error").hide();
+                                $("#" + field_name + "_show").show();
+                                $("#" + field_name + "_show").load(data_path + field_name);
+                            },
+                            error: function(xhr, textStatus, errorThrown) {
+                                $("#" + field_name + "_error").show();
+                                $("#" + field_name + "_error").text('invalid value entered');
+                            }
+                        });
+                    });
+                });
+            }
+            $(document).ready(function(){
+                $(".settings_field_form").each(function(){
+                    setup_field_form($(this).attr('id'), $(this).attr('data-path'))
+                });
+            });
+        </script>
+        <style>
+            .name_field {
+                cursor:pointer;
+                color:blue;
+                text-decoration:underline;
+            }
+            .settings_field_error {
+                color:red;
+            }
+        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <h1>Trainer Tools</h1>
+        <div id="tabs">
+            <ul>
+              <li><a href="#tabs-1">Service</a></li>
+              <li><a href="#tabs-2">Settings</a></li>
+              <li><a href="#tabs-3">Device Config</a></li>
+            </ul>
+            <div id="tabs-1">
+            </div>
+            <div id="tabs-2">
+                <<SETTINGS_FIELD_LIST>>
+            </div>
+            <div id="tabs-3">
+                <<DEVICE_SETTINGS_FIELD_LIST>>
+            </div>
+          </div>
+    </body>
+</html>
