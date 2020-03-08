@@ -1,5 +1,5 @@
 [Unit]
-Description=Trainer Tools Web Server
+Description=Missionary Server service
 After=network.target
 StartLimitIntervalSec=0
 
@@ -9,7 +9,7 @@ Restart=always
 RestartSec=1
 User={USER_NAME}
 WorkingDirectory={INSTALL_DIR}
-ExecStart=/bin/bash {INSTALL_DIR}/run_script
+ExecStart=/usr/bin/env python3 {INSTALL_DIR}/trainer_server.py
 
 [Install]
 WantedBy=multi-user.target

@@ -4,7 +4,7 @@ from setup.package import Package
 from setup.packages import rpi_gpioPackage, openantPackage, neopixelPackage
 from setup.user import InstallUser
 from setup.usersetup import TrainerToolsUserSetup
-from setup.service import TrainerToolsService
+from setup.service import TrainerToolsService, TrainerToolsWebServer
 
 
 class trainer_toolsPackage(Package):
@@ -14,6 +14,7 @@ class trainer_toolsPackage(Package):
         self._install_user = InstallUser('setup.py')
         self._user_setup = TrainerToolsUserSetup(self._install_user)
         self._service = TrainerToolsService(self._install_user)
+        self._web_server = TrainerToolsWebServer(self._install_user)
         self.add_package(rpi_gpioPackage())
         self.add_package(openantPackage())
         self.add_package(neopixelPackage())
@@ -28,3 +29,4 @@ class trainer_toolsPackage(Package):
         print('Installing trainer_tools dependencies...')
         super().install_dependencies()
         self._service.install()
+        self._web_server.install()
