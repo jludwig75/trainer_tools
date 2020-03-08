@@ -1,7 +1,7 @@
 import os
 
 from setup.package import Package
-from setup.packages import rpi_gpioPackage, openantPackage, neopixelPackage
+from setup.packages import rpi_gpioPackage, openantPackage, neopixelPackage, cherrypyPackage
 from setup.user import InstallUser
 from setup.usersetup import TrainerToolsUserSetup
 from setup.service import TrainerToolsService, TrainerToolsWebServer
@@ -18,6 +18,7 @@ class trainer_toolsPackage(Package):
         self.add_package(rpi_gpioPackage())
         self.add_package(openantPackage())
         self.add_package(neopixelPackage())
+        self.add_package(cherrypyPackage())
         print('Packages configured')
 
     def install(self):

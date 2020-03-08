@@ -43,6 +43,26 @@ class pyusbPackage(Package):
         print('  Installing "%s"...' % self.name)
         os.system('pip3 install pyusb')
 
+class cherrypyPackage(Package):
+    def __init__(self):
+        super().__init__('cherrypy')
+        self.add_package(pip3Package())
+
+    @property
+    def installed(self):
+        if not super().dependencies_installed:
+            return False
+        try:
+            import cherrypy
+            return True
+        except:
+            return False
+
+    def install(self):
+        super().install_dependencies()
+        print('  Installing "%s"...' % self.name)
+        os.system('pip3 install cherrypy')
+
 class openantPackage(Package):
     def __init__(self):
         super().__init__('openant')
