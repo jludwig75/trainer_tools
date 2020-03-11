@@ -40,10 +40,119 @@
                     });
                 });
             }
+            function on_service_running() {
+                $("#service_status").text("Running");
+                $("#start_service").prop('disabled', true);
+                $("#stop_service").prop('disabled', false);
+                $("#restart_service").prop('disabled', false);
+            }
+            function on_service_stopped() {
+                $("#service_status").text("Stopped");
+                $("#start_service").prop('disabled', false);
+                $("#stop_service").prop('disabled', true);
+                $("#restart_service").prop('disabled', true);
+            }
+            function on_waiting_for_service_action(action) {
+                $("#service_status").text(action + " please wait...");
+                $("#start_service").prop('disabled', true);
+                $("#stop_service").prop('disabled', true);
+                $("#restart_service").prop('disabled', true);
+            }
+            function update_service_status() {
+                $.get("/service/running", function(data) {
+                    if (data == "true") {
+                        on_service_running();
+                    } else {
+                        on_service_stopped();
+                    }
+                });
+            }
+            function service_buttons_init() {
+                // on_waiting_for_service_action();
+                on_service_stopped();
+                update_service_status();
+                $("#start_service").click(function() {
+                    on_waiting_for_service_action("Starting...");
+                    $.ajax({url: "/service/start",
+                            type: "PUT",
+                            success: function() {
+                                update_service_status();
+                            }});
+                });
+                $("#stop_service").click(function() {
+                    on_waiting_for_service_action("Stopping...");
+                    $.ajax({url: "/service/stop",
+                            type: "PUT",
+                            success: function() {
+                                update_service_status();
+                            }});
+                });
+                $("#restart_service").click(function() {
+                    on_waiting_for_service_action("Restarting...");
+                    $.ajax({url: "/service/restart",
+                            type: "PUT",
+                            success: function() {
+                                update_service_status();
+                            }});
+                });
+            }
+            function ConfirmDialog(title, message, on_no, on_yes) {
+            $('<div></div>').appendTo('body')
+                .html('<div><h6>' + message + '?</h6></div>')
+                .dialog({
+                modal: true,
+                title: title,
+                zIndex: 10000,
+                autoOpen: true,
+                width: 'auto',
+                resizable: false,
+                buttons: {
+                    Yes: function() {
+                        on_yes();
+                        $(this).dialog("close");
+                    },
+                    No: function() {
+                        on_no();
+                        $(this).dialog("close");
+                    }
+                },
+                close: function(event, ui) {
+                    $(this).remove();
+                }
+                });
+            };            
+            function system_buttons_init() {
+                $("#shutdown_system").click(function() {
+                    ConfirmDialog("Shutdown System", 'Are you sure you want to shutdown', function(){}, function() {
+                        $.ajax({
+                                    url: "/service/shutdown_system",
+                                    type: "PUT",
+                                    success: function() {
+                                        $('body').append('<h3>Shutting down system. Refresh page when system is back up.</h3>');
+                                        $(':button').prop('disabled', true);
+                                    }
+                                });
+                        });
+                });
+                $("#restart_system").click(function() {
+                    ConfirmDialog("Restart System", 'Are you sure you want to restart', function(){}, function() {
+                        $.ajax({
+                                    url: "/service/restart_system",
+                                    type: "PUT",
+                                    success: function() {
+                                        $('body').append('<h3>Restarting system. Refresh page when system is back up.</h3>');
+                                        $(':button').prop('disabled', true);
+                                    }
+                                });
+                        });
+                });
+            }
             $(document).ready(function(){
                 $(".settings_field_form").each(function(){
                     setup_field_form($(this).attr('id'), $(this).attr('data-path'))
                 });
+                service_buttons_init();
+                system_buttons_init();
             });
         </script>
         <style>
@@ -54,6 +163,9 @@
             }
             .settings_field_error {
                 color:red;
+            }
+            #service_status {
+                padding-bottom: 1em;
             }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -67,6 +179,20 @@
               <li><a href="#tabs-3">Device Config</a></li>
             </ul>
             <div id="tabs-1">
+                <div>
+                    <h3>Trainer Tools Service</h3>
+                    <div id="service_status">Not Connected</div>
+                    <div>
+                        <button id="start_service">Start</button>
+                        <button id="stop_service">Stop</button>
+                        <button id="restart_service">Restart</button>
+                    </div>
+                </div>
+                <div>
+                    <h3>System</h3>
+                    <button id="restart_system">Restart</button>
+                    <button id="shutdown_system">Shutdown</button>
+                </div>
             </div>
             <div id="tabs-2">
                 <<SETTINGS_FIELD_LIST>>
