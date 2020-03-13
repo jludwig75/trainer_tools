@@ -1,41 +1,7 @@
 import cherrypy
-import time
+from server.systemcontrol import SystemControl
+from server.systemd import SystemdServiceControl
 
-
-class SystemdServiceControl:
-    def __init__(self, service_name):
-        self._service_name = service_name
-        self._running = False
-
-    @property
-    def running(self):
-        return self._running
-
-    def start(self):
-        if self._running:
-            return True
-        time.sleep(2)
-        self._running = True
-        return True
-
-    def restart(self):
-        if not self.stop():
-            return False
-        return self.start()
-
-    def stop(self):
-        if not self._running:
-            return True
-        time.sleep(1)
-        self._running = False
-        return True
-
-class SystemControl:
-    def restart(self):
-        return True
-
-    def shutdown(self):
-        return True
 
 class TrainerToolsService(object):
     def __init__(self):
