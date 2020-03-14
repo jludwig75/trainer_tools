@@ -6,6 +6,10 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
         <script>
+            const MSECS_PRE_SEC = 1000;
+            function SECONDS(seconds) {
+                return seconds * MSECS_PRE_SEC;
+            }
             $( function() {
               $( "#tabs" ).tabs();
             } );
@@ -68,8 +72,7 @@
                 });
             }
             function service_buttons_init() {
-                // on_waiting_for_service_action();
-                on_service_stopped();
+                on_waiting_for_service_action("Initializing...");
                 update_service_status();
                 $("#start_service").click(function() {
                     on_waiting_for_service_action("Starting...");
@@ -147,12 +150,16 @@
                         });
                 });
             }
+            function update_10_seconds() {
+                update_service_status();
+            }
             $(document).ready(function(){
                 $(".settings_field_form").each(function(){
                     setup_field_form($(this).attr('id'), $(this).attr('data-path'))
                 });
                 service_buttons_init();
                 system_buttons_init();
+                setInterval(update_10_seconds, SECONDS(10));
             });
         </script>
         <style>
