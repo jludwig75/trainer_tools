@@ -150,7 +150,7 @@
                         });
                 });
             }
-            function update_10_seconds() {
+            function update_5_seconds() {
                 update_service_status();
             }
             $(document).ready(function(){
@@ -159,7 +159,7 @@
                 });
                 service_buttons_init();
                 system_buttons_init();
-                setInterval(update_10_seconds, SECONDS(10));
+                setInterval(update_5_seconds, SECONDS(5));
             });
         </script>
         <style>
