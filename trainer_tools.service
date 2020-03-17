@@ -7,7 +7,7 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-User={USER_NAME}
+User=root
 WorkingDirectory={INSTALL_DIR}
 ExecStart=/bin/bash {INSTALL_DIR}/run_script
 
