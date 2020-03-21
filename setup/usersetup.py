@@ -17,4 +17,4 @@ class TrainerToolsUserSetup:
     def install(self):
         self._switch_to_install_user()
         self._settings.install()
-        # self._start_script.install()
+        self._start_script.install()
