@@ -23,6 +23,7 @@
 
 import sys
 import logging
+import signal
 from configparser import ConfigParser
 from scriptcommon import init_logging
 
@@ -49,6 +50,8 @@ def main():
     logging.info('Initializing LED strip driver')
     color_strip = ColorStrip(device_cfg, LED_FREQ_HZ)
 
+    signal.signal(signal.SIGTERM, lambda : color_strip.set_color(RgbColor(0, 0, 0)))
+
     logging.info('Creating ANT+ node')
     node = AntPlusNode(NETWORK_KEY)
     
@@ -64,7 +67,7 @@ def main():
         raise
     finally:
         logging.info('Turning off LED strip')
-        color_strip.set_color(RgbColor(0, 0, 0), 10)
+        color_strip.set_color(RgbColor(0, 0, 0))
         logging.info('Stopping ANT+ node')
         node.stop()
 
