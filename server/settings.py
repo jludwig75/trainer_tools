@@ -21,3 +21,11 @@ class Settings(SettingsBase):
     @cherrypy.expose
     def fan_speed_3_hr(self, fan_speed_3_hr=None):
         return self.handle_setting_request('FanSpeedHeartRates', 'high', int, fan_speed_3_hr)
+
+    @cherrypy.expose
+    def heart_rate_swing(self, heart_rate_swing=None):
+        return self.handle_setting_request('HRFan', 'hr_swing', int, heart_rate_swing)
+
+    @cherrypy.expose
+    def power_swing_watts(self, power_swing_watts=None):
+        return self.handle_setting_request('PwrLEDs', 'pwr_swing', int, power_swing_watts)
