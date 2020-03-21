@@ -1,5 +1,5 @@
 [Main]
-version=1
+version=2
 
 [FanSpeedHeartRates]
 low=100
@@ -8,3 +8,9 @@ high=160
 
 [Athlete]
 FTP=305
+
+[HRFan]
+hr_swing = 5
+
+[PwrLEDs]
+pwr_swing = 2

@@ -47,6 +47,8 @@ class hrm1Test(unittest.TestCase):
         config.set('FanSpeedHeartRates', 'low', '100')
         config.set('FanSpeedHeartRates', 'medium', '140')
         config.set('FanSpeedHeartRates', 'high', '160')
+        config.add_section('HRFan')
+        config.set('HRFan', 'hr_swing', '5')
         with open('settings.cfg', 'wt') as configfile:
             config.write(configfile)
 

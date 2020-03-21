@@ -22,7 +22,7 @@ class trainer_toolsPackage(Package):
         print('Packages configured')
 
     def install(self):
-        self._do_system_install()
+        # self._do_system_install()
         self._user_setup.install()
         print('Please reboot this Raspberry Pi to make sure the services are started.')
     

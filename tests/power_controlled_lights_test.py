@@ -53,6 +53,8 @@ class hrm1Test(unittest.TestCase):
         config = ConfigParser()
         config.add_section('Athlete')
         config.set('Athlete', 'FTP', '100')   # Use FTP of 100 so we can use percentages in the test
+        config.add_section('PwrLEDs')
+        config.set('PwrLEDs', 'pwr_swing', '5')
         with open('settings.cfg', 'wt') as configfile:
             config.write(configfile)
 

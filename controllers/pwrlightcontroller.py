@@ -44,12 +44,12 @@ def build_power_ranges(ftp):
 
 
 class PowerLightController(Controller):
-    def __init__(self, request_reset, cancel_reset, cfg, power_meter, light_strip, range_swing = 2):
+    def __init__(self, request_reset, cancel_reset, cfg, power_meter, light_strip):
         super().__init__(request_reset, cancel_reset)
         self._power_meter = power_meter
         self._light_strip = light_strip
         self._power_ranges = build_power_ranges(cfg.getint('Athlete', 'FTP'))
-        self._range_swing = range_swing
+        self._range_swing = cfg.getint('PwrLEDs', 'pwr_swing')
         self._MIN_PWR_COLOR = 0
         self._MAX_PWR_COLOR=len(self._power_ranges) - 1
         self._power_meter.on_power_data = self.on_power_data

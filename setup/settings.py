@@ -18,11 +18,9 @@ class TrainerToolsSettings:
                 install_cfg = ConfigParser()
                 install_cfg.read(install_file_name)
                 if current_cfg.getint('Main', 'version') < install_cfg.getint('Main', 'version'):
-                    settings_backup_name = '%s.backup' % file_name
-                    print('Replacing config file %s with newer version. Current config file will be saved as %s' % (file_name, settings_backup_name))
-                    # Because there is only one version, we should never see this
-                    # When a new version is introduced, also handle upgrading the file instead of replacing it.
-                    shutil.copy(file_name, settings_backup_name)
+                    print('Upgrading settings file to new version')
+                    self._upgrade_settings(file_name, install_file_name)
+                    return
                 else:
                     print('Not replacing config file %s' % file_name)
                     return
@@ -30,3 +28,30 @@ class TrainerToolsSettings:
                 pass
 
         shutil.copy(install_file_name, file_name)
+
+    def _upgrade_settings(self, file_name, install_file_name):
+        current_cfg = ConfigParser()
+        current_cfg.read(file_name)
+        install_cfg = ConfigParser()
+        install_cfg.read(install_file_name)
+        print('Upgrading settings file "%s" from version %u to %u' % (file_name, current_cfg.getint('Main', 'version'), install_cfg.getint('Main', 'version')))
+        for section in install_cfg.sections():
+            print('transferring section "%s"' % section)
+            if not section in current_cfg.sections():
+                print('section "%s" not found in current cfg file. Skipping' % section)
+                continue
+            for k, v in install_cfg[section].items():
+                print('transferring [%s].%s' % (section, k))
+                # Don't copy over the new version
+                if section == 'Main' and k == 'version':
+                    print('Not transferring version')
+                    continue
+                if not k in current_cfg[section]:
+                    print('key [%s].%s not found in current cfg file. Skipping' % (section, k))
+                    continue
+                new_value = current_cfg[section][k]
+                print('transferring [%s].%s = %s' % (section, k, new_value))
+                install_cfg[section][k] = new_value
+        with open(file_name, 'w') as cfg_file:
+            install_cfg.write(cfg_file)
+
