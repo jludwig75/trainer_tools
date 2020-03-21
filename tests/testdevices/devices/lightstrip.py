@@ -18,7 +18,7 @@ def get_color_strip_instance():
 
 
 class ColorStrip:
-    def __init__(self, led_count, led_pin, led_freq):
+    def __init__(self, led_pin, led_freq):
         init_gpio()
         global color_strip_instance
         self.current_color = RgbColor(0, 0, 0)

@@ -36,7 +36,6 @@ from controllers.pwrlightcontroller import PowerLightController
 NETWORK_KEY= [0xb9, 0xa5, 0x21, 0xfb, 0xbd, 0x72, 0xc3, 0x45]
 
 
-LED_COUNT      = 120      # Number of LED pixels.
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 
 class TwoClientNodeStopper:
@@ -76,7 +75,7 @@ def main():
     logging.info('Initializing fan driver')
     fan = FourSpeedRealayFan(device_cfg)
     logging.info('Initializing LED strip driver')
-    color_strip = ColorStrip(device_cfg, LED_COUNT, LED_FREQ_HZ)
+    color_strip = ColorStrip(device_cfg, LED_FREQ_HZ)
 
     logging.info('Creating ANT+ node')
     node = AntPlusNode(NETWORK_KEY)
