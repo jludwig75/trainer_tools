@@ -23,7 +23,7 @@ class trainer_toolsPackage(Package):
         logging.info('Packages configured')
 
     def install(self):
-        # self._do_system_install()
+        self._do_system_install()
         self._user_setup.install()
         logging.info('Please reboot this Raspberry Pi to make sure the services are started.')
     
