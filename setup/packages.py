@@ -1,6 +1,7 @@
 import os
 import shutil
 from setup.package import Package
+import logging
 
 
 class pip3Package(Package):
@@ -20,7 +21,7 @@ class pip3Package(Package):
 
     def install(self):
         super().install_dependencies()
-        print('  Installing "%s"...' % self.name)
+        logging.info('  Installing "%s"...' % self.name)
         os.system('apt install -y python3-pip')
 
 class pyusbPackage(Package):
@@ -40,7 +41,7 @@ class pyusbPackage(Package):
 
     def install(self):
         super().install_dependencies()
-        print('  Installing "%s"...' % self.name)
+        logging.info('  Installing "%s"...' % self.name)
         os.system('pip3 install pyusb')
 
 class cherrypyPackage(Package):
@@ -60,7 +61,7 @@ class cherrypyPackage(Package):
 
     def install(self):
         super().install_dependencies()
-        print('  Installing "%s"...' % self.name)
+        logging.info('  Installing "%s"...' % self.name)
         os.system('pip3 install cherrypy')
 
 class openantPackage(Package):
@@ -84,9 +85,9 @@ class openantPackage(Package):
             # This package may have reported not installed, because its
             # dependencies were not installed. Check again now that the
             # dependencies are installed.
-            print('  package "%s" is already installed' % self.name)
+            logging.info('  package "%s" is already installed' % self.name)
             return
-        print('  Installing "%s"...' % self.name)
+        logging.info('  Installing "%s"...' % self.name)
         os.system('git clone https://github.com/Tigge/openant.git')
         os.chdir('openant')
         os.system('python3 setup.py install')
@@ -109,7 +110,7 @@ class rpi_gpioPackage(Package):
 
     def install(self):
         super().install_dependencies()
-        print('  Installing "%s"...' % self.name)
+        logging.info('  Installing "%s"...' % self.name)
         os.system('apt install -y python3-rpi.gpio')
 
 class neopixelPackage(Package):
@@ -131,7 +132,7 @@ class neopixelPackage(Package):
 
     def install(self):
         super().install_dependencies()
-        print('  Installing "%s"...' % self.name)
+        logging.info('  Installing "%s"...' % self.name)
         os.system('apt-get install -y gcc make build-essential python-dev git scons swig')
         reboot = self._disbale_audio()
         os.system('git clone https://github.com/jgarff/rpi_ws281x')
@@ -144,7 +145,7 @@ class neopixelPackage(Package):
         shutil.rmtree('rpi_ws281x')
         self._installed = True
         if reboot:
-            print('  !!! Please reboot the computer !!!')
+            logging.info('  !!! Please reboot the computer !!!')
 
     def _disbale_audio(self):
         reboot_blacklist = self._blacklist_audio()

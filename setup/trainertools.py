@@ -1,4 +1,5 @@
 import os
+import logging
 
 from setup.package import Package
 from setup.packages import rpi_gpioPackage, openantPackage, neopixelPackage, cherrypyPackage
@@ -9,7 +10,7 @@ from setup.service import TrainerToolsService, TrainerToolsWebServer
 
 class trainer_toolsPackage(Package):
     def __init__(self):
-        print('Configuring packages...')
+        logging.info('Configuring packages...')
         super().__init__('trainer_tools')
         self._install_user = InstallUser('setup.py')
         self._user_setup = TrainerToolsUserSetup(self._install_user)
@@ -19,16 +20,16 @@ class trainer_toolsPackage(Package):
         self.add_package(openantPackage())
         self.add_package(neopixelPackage())
         self.add_package(cherrypyPackage())
-        print('Packages configured')
+        logging.info('Packages configured')
 
     def install(self):
-        self._do_system_install()
+        # self._do_system_install()
         self._user_setup.install()
-        print('Please reboot this Raspberry Pi to make sure the services are started.')
+        logging.info('Please reboot this Raspberry Pi to make sure the services are started.')
     
     def _do_system_install(self):
         os.system('apt-get update')
-        print('Installing trainer_tools dependencies...')
+        logging.info('Installing trainer_tools dependencies...')
         super().install_dependencies()
         self._service.install()
         self._web_server.install()

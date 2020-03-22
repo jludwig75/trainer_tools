@@ -1,7 +1,8 @@
 import os
 import socket
-
 import socket
+import logging
+
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -45,6 +46,6 @@ class TrainerToolsWebServer(SystemdService):
         SystemdService.__init__(self, 'trainer_server.service', install_user)
     def install(self):
         SystemdService.install(self)
-        print('After reboot the web interface will be accessible at "%s:8080"' % socket.gethostname())
-        print('If that is inaccessible use "%s:8080"' % get_ip())
+        logging.info('After reboot the web interface will be accessible at "%s:8080"' % socket.gethostname())
+        logging.info('If that is inaccessible use "%s:8080"' % get_ip())
 
