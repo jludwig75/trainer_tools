@@ -45,6 +45,7 @@ from __future__ import absolute_import, print_function
 import time
 import logging
 from sensors.internal import dump_data
+from filelock import FileLock
 
 
 ANT_PLUS_FREQUENCY=57
@@ -64,6 +65,7 @@ class AntPlusHRM:
         self._channel.set_search_timeout(HRM_TIMEOUT)
         self._channel.set_rf_freq(ANT_PLUS_FREQUENCY)
         self._channel.set_id(device_number, HRM_DEVICE_TYPE, transfer_type)
+        self._lock = FileLock("hr.curr.lock")
     
     def _on_data(self, data):
         logging.debug('Heart rate monitor received data %s' % dump_data(data))
@@ -71,6 +73,9 @@ class AntPlusHRM:
         self._last_hr_time = time.time()
         if self.on_heart_rate_data != None:
             self.on_heart_rate_data(self._last_hr, data)
+            with self._lock:
+                with open('hr.curr', 'wt') as f:
+                    f.write(str(self._last_hr))
 
     @property
     def last_heart_rate(self):

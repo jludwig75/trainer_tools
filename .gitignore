@@ -4,3 +4,8 @@ device_settings.cfg
 *.log
 start_script
 *settings.cfg.backup
+hr.curr
+hr.curr.lock
+pwr.curr
+pwr.curr.lock
+.vscode

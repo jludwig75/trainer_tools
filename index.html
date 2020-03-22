@@ -157,6 +157,11 @@
             function update_5_seconds() {
                 update_service_status();
             }
+            function update_1_second() {
+                update_service_status();
+                $("#hr_curr").load("/service/hr_curr");
+                $("#pwr_curr").load("/service/pwr_curr");
+            }
             $(document).ready(function(){
                 $(".settings_field_form").each(function(){
                     setup_field_form($(this).attr('id'), $(this).attr('data-path'))
@@ -164,6 +169,7 @@
                 service_buttons_init();
                 system_buttons_init();
                 setInterval(update_5_seconds, SECONDS(5));
+                setInterval(update_1_second, SECONDS(1));
             });
         </script>
         <style>
@@ -175,7 +181,7 @@
             .settings_field_error {
                 color:red;
             }
-            #service_status {
+            .service_status {
                 padding-bottom: 1em;
             }
         </style>
@@ -191,8 +197,15 @@
             </ul>
             <div id="tabs-1">
                 <div>
+                    <h3>Current Data</h3>
+                    <div>
+                        <span>HR: </span><span id="hr_curr">--</span>
+                    </div>
+                    <div>
+                        <span>Watts: </span><span id="pwr_curr">--</span>
+                    </div>
                     <h3>Trainer Tools Service</h3>
-                    <div id="service_status">Not Connected</div>
+                    <div class="service_status"><span>Status: </span><span id="service_status">Not Connected</span></div>
                     <div>
                         <button id="start_service">Start</button>
                         <button id="stop_service">Stop</button>

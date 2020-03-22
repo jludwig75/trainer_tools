@@ -45,6 +45,7 @@ from __future__ import absolute_import, print_function
 import time
 import logging
 from sensors.internal import dump_data
+from filelock import FileLock
 
 
 ANT_PLUS_FREQUENCY=57
@@ -65,6 +66,7 @@ class AntPlusPowerMeter:
         self._channel.set_search_timeout(HRM_TIMEOUT)
         self._channel.set_rf_freq(ANT_PLUS_FREQUENCY)
         self._channel.set_id(device_number, PWR_METER_DEVICE_TYPE, transfer_type)
+        self._lock = FileLock("pwr.curr.lock")
     
     def _on_data(self, data):
         logging.debug('Power meter received data %s' % dump_data(data))
@@ -73,6 +75,9 @@ class AntPlusPowerMeter:
             self._last_pwr_time = time.time()
             if self.on_power_data != None:
                 self.on_power_data(self._last_pwr, data)
+                with self._lock:
+                    with open('pwr.curr', 'wt') as f:
+                        f.write(str(self._last_pwr))
         if data[0] in [0x10, 0x11, 0x12]:
             cadence = int(data[3])
             if self.on_cadence_data != None:

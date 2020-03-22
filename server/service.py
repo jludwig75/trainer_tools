@@ -1,12 +1,15 @@
 import cherrypy
 from server.systemcontrol import SystemControl
 from server.systemd import SystemdServiceControl
+from filelock import FileLock
 
 
 class TrainerToolsService(object):
     def __init__(self):
         self._service = SystemdServiceControl('trainer_tools.service')
         self._system = SystemControl()
+        self._hr_lock = FileLock("hr.curr.lock")
+        self._pwr_lock = FileLock("pwr.curr.lock")
 
     @cherrypy.expose
     def running(self):
@@ -48,3 +51,15 @@ class TrainerToolsService(object):
             raise cherrypy.HTTPError(405)
         if not self._system.shutdown():
             raise cherrypy.HTTPError(500, 'Unable to shutdown system')
+
+    @cherrypy.expose
+    def hr_curr(self):
+        with self._hr_lock:
+            with open('hr.curr', 'rt') as f:
+                return f.read()
+
+    @cherrypy.expose
+    def pwr_curr(self):
+        with self._pwr_lock:
+            with open('pwr.curr', 'rt') as f:
+                return f.read()
