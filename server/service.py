@@ -2,6 +2,8 @@ import cherrypy
 from server.systemcontrol import SystemControl
 from server.systemd import SystemdServiceControl
 from filelock import FileLock
+import os
+import time
 
 
 class TrainerToolsService(object):
@@ -55,11 +57,17 @@ class TrainerToolsService(object):
     @cherrypy.expose
     def hr_curr(self):
         with self._hr_lock:
+            stat = os.stat('hr.curr')
+            if time.time() - stat.st_mtime > 4:
+                return '--'
             with open('hr.curr', 'rt') as f:
                 return f.read()
 
     @cherrypy.expose
     def pwr_curr(self):
         with self._pwr_lock:
+            stat = os.stat('pwr.curr')
+            if time.time() - stat.st_mtime > 4:
+                return '--'
             with open('pwr.curr', 'rt') as f:
                 return f.read()

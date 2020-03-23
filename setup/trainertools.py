@@ -2,7 +2,7 @@ import os
 import logging
 
 from setup.package import Package
-from setup.packages import rpi_gpioPackage, openantPackage, neopixelPackage, cherrypyPackage
+from setup.packages import rpi_gpioPackage, openantPackage, neopixelPackage, cherrypyPackage, filelockPackage
 from setup.user import InstallUser
 from setup.usersetup import TrainerToolsUserSetup
 from setup.service import TrainerToolsService, TrainerToolsWebServer
@@ -20,6 +20,7 @@ class trainer_toolsPackage(Package):
         self.add_package(openantPackage())
         self.add_package(neopixelPackage())
         self.add_package(cherrypyPackage())
+        self.add_package(filelockPackage())
         logging.info('Packages configured')
 
     def install(self):

@@ -64,6 +64,26 @@ class cherrypyPackage(Package):
         logging.info('  Installing "%s"...' % self.name)
         os.system('pip3 install cherrypy')
 
+class filelockPackage(Package):
+    def __init__(self):
+        super().__init__('filelock')
+        self.add_package(pip3Package())
+
+    @property
+    def installed(self):
+        if not super().dependencies_installed:
+            return False
+        try:
+            import filelock
+            return True
+        except:
+            return False
+
+    def install(self):
+        super().install_dependencies()
+        logging.info('  Installing "%s"...' % self.name)
+        os.system('pip3 install filelock')
+
 class openantPackage(Package):
     def __init__(self):
         super().__init__('openant')

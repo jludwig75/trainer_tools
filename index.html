@@ -184,6 +184,9 @@
             .service_status {
                 padding-bottom: 1em;
             }
+            .stat_heading {
+                font-weight: bold;
+            }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
@@ -197,14 +200,14 @@
             </ul>
             <div id="tabs-1">
                 <div>
-                    <h3>Current Data</h3>
+                    <h2>Current Data</h2>
                     <div>
-                        <span>HR: </span><span id="hr_curr">--</span>
+                        <span class="stat_heading">HR: </span><span id="hr_curr">--</span>
                     </div>
                     <div>
-                        <span>Watts: </span><span id="pwr_curr">--</span>
+                        <span class="stat_heading">Watts: </span><span id="pwr_curr">--</span>
                     </div>
-                    <h3>Trainer Tools Service</h3>
+                    <h2>Trainer Tools Service</h2>
                     <div class="service_status"><span>Status: </span><span id="service_status">Not Connected</span></div>
                     <div>
                         <button id="start_service">Start</button>
@@ -213,7 +216,7 @@
                     </div>
                 </div>
                 <div>
-                    <h3>System</h3>
+                    <h2>System</h2>
                     <button id="restart_system">Restart</button>
                     <button id="shutdown_system">Shutdown</button>
                 </div>
