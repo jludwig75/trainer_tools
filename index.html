@@ -162,9 +162,43 @@
                 $("#hr_curr").load("/service/hr_curr");
                 $("#pwr_curr").load("/service/pwr_curr");
             }
+            function init_script_form() {
+                $("#script_curr").load("/service/start_script");
+                $("#scripts").text('');
+                $('#script_form_submit').prop('disabled', false);
+                $.get("/service/start_script", function(current_script) {
+                    $.get("/service/start_scripts", function(data){
+                        var scripts = JSON.parse(data);
+                        scripts.forEach(function(item, idx) {
+                            if (current_script == item)
+                            {
+                                $("#scripts").append('<option value="' + item + '" selected>' + item + '</option>');
+                            }
+                            else
+                            {
+                                $("#scripts").append('<option value="' + item + '">' + item + '</option>');
+                            }
+                        });
+                    })
+                });
+            }
             $(document).ready(function(){
                 $(".settings_field_form").each(function(){
                     setup_field_form($(this).attr('id'), $(this).attr('data-path'))
+                });
+                init_script_form();
+                $("#script_form").ajaxForm( {
+                    beforeSubmit: function() {
+                        $('#script_form_submit').prop('disabled', true);
+                        $("#script_curr").text('Changing start script. Please wait...');
+                    },
+                    success: function() {
+                        init_script_form();
+                    },
+                    error: function() {
+                        alert("Failed to set start script");
+                        init_script_form();
+                    }
                 });
                 service_buttons_init();
                 system_buttons_init();
@@ -187,6 +221,9 @@
             .stat_heading {
                 font-weight: bold;
             }
+            .field_item {
+                margin-bottom: 0.5em;
+            }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
@@ -201,10 +238,10 @@
             <div id="tabs-1">
                 <div>
                     <h2>Current Data</h2>
-                    <div>
+                    <div class="field_item">
                         <span class="stat_heading">HR: </span><span id="hr_curr">--</span>
                     </div>
-                    <div>
+                    <div class="field_item">
                         <span class="stat_heading">Watts: </span><span id="pwr_curr">--</span>
                     </div>
                     <h2>Trainer Tools Service</h2>
@@ -219,6 +256,18 @@
                     <h2>System</h2>
                     <button id="restart_system">Restart</button>
                     <button id="shutdown_system">Shutdown</button>
+                </div>
+                <div>
+                    <h2>Start Script</h2>
+                    <div class="field_item">
+                        <span class="stat_heading">Current Script: </span><span id="script_curr">--</span>
+                    </div>
+                    <form id="script_form" method="POST" action="/service/start_script">
+                        <lable for="scripts">Start Script: </lable>
+                        <select id="scripts" name="start_script">
+                        </select>
+                        <input id="script_form_submit" type="submit" value="Select">
+                    </form>
                 </div>
             </div>
             <div id="tabs-2">

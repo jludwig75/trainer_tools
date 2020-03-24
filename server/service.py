@@ -2,9 +2,10 @@ import cherrypy
 from server.systemcontrol import SystemControl
 from server.systemd import SystemdServiceControl
 from filelock import FileLock
+from server.common import run_cmd
 import os
 import time
-
+import json
 
 class TrainerToolsService(object):
     def __init__(self):
@@ -12,6 +13,7 @@ class TrainerToolsService(object):
         self._system = SystemControl()
         self._hr_lock = FileLock("hr.curr.lock")
         self._pwr_lock = FileLock("pwr.curr.lock")
+        self._start_scripts = {'Control Fan and Lights': 'control_fan_and_lights.py', 'HR Controlled Fan': 'hr_controlled_fan.py', 'Power Controlled Lights': 'power_controlled_lights.py'}
 
     @cherrypy.expose
     def running(self):
@@ -71,3 +73,37 @@ class TrainerToolsService(object):
                 return '--'
             with open('pwr.curr', 'rt') as f:
                 return f.read()
+
+    @cherrypy.expose
+    def start_scripts(self):
+        if cherrypy.request.method != 'GET':
+            raise cherrypy.HTTPError(405)
+        keys = [x for x in self._start_scripts.keys()]
+        return json.dumps(keys)
+
+    def _current_script(self):
+        if not os.path.exists('start_script'):
+            return ''
+        script = os.readlink('start_script')
+        script_name = ''
+        for k, v in self._start_scripts.items():
+            if v == script:
+                script_name = k
+        return script_name
+
+    @cherrypy.expose
+    def start_script(self, start_script=None):
+        if cherrypy.request.method == 'GET':
+            return self._current_script()
+        elif cherrypy.request.method == 'POST':
+            if not start_script in self._start_scripts.keys():
+                raise cherrypy.HTTPError(405)
+            if start_script == self._current_script():
+                return  # Nothing to do
+            run_cmd('sudo systemctl stop trainer_tools')
+            if os.path.exists('start_script'):
+                os.unlink('start_script')
+            os.symlink(self._start_scripts[start_script], 'start_script')
+            run_cmd('sudo systemctl stop trainer_tools')
+        else:
+            raise cherrypy.HTTPError(405)
