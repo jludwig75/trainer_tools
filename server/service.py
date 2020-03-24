@@ -104,6 +104,6 @@ class TrainerToolsService(object):
             if os.path.exists('start_script'):
                 os.unlink('start_script')
             os.symlink(self._start_scripts[start_script], 'start_script')
-            run_cmd('sudo systemctl stop trainer_tools')
+            run_cmd('sudo systemctl start trainer_tools')
         else:
             raise cherrypy.HTTPError(405)
