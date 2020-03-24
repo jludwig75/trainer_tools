@@ -231,19 +231,22 @@
         <h1>Trainer Tools</h1>
         <div id="tabs">
             <ul>
-              <li><a href="#tabs-1">Service</a></li>
-              <li><a href="#tabs-2">Settings</a></li>
-              <li><a href="#tabs-3">Device Config</a></li>
+              <li><a href="#tabs-1">Status</a></li>
+              <li><a href="#tabs-2">Service Configuration</a></li>
+              <li><a href="#tabs-3">Settings</a></li>
+              <li><a href="#tabs-4">Device Configuration</a></li>
             </ul>
             <div id="tabs-1">
+                <h2>Current Data</h2>
+                <div class="field_item">
+                    <span class="stat_heading">HR: </span><span id="hr_curr">--</span>
+                </div>
+                <div class="field_item">
+                    <span class="stat_heading">Watts: </span><span id="pwr_curr">--</span>
+                </div>
+            </div>
+            <div id="tabs-2">
                 <div>
-                    <h2>Current Data</h2>
-                    <div class="field_item">
-                        <span class="stat_heading">HR: </span><span id="hr_curr">--</span>
-                    </div>
-                    <div class="field_item">
-                        <span class="stat_heading">Watts: </span><span id="pwr_curr">--</span>
-                    </div>
                     <h2>Trainer Tools Service</h2>
                     <div class="service_status"><span>Status: </span><span id="service_status">Not Connected</span></div>
                     <div>
@@ -269,10 +272,10 @@
                     </form>
                 </div>
             </div>
-            <div id="tabs-2">
+            <div id="tabs-3">
                 <<SETTINGS_FIELD_LIST>>
             </div>
-            <div id="tabs-3">
+            <div id="tabs-4">
                 <<DEVICE_SETTINGS_FIELD_LIST>>
             </div>
           </div>
