@@ -41,11 +41,11 @@ def build_hr_speed_ranges(low, medium, high):
 class HRFanController(Controller):
     def __init__(self, request_reset, cancel_reset, cfg, hrm, fan):
         super().__init__(request_reset, cancel_reset)
-        logging.info('Initializing HRFanController')
         low = cfg.getint('FanSpeedHeartRates', 'low')
         medium = cfg.getint('FanSpeedHeartRates', 'medium')
         high = cfg.getint('FanSpeedHeartRates', 'high')
         self._range_swing = cfg.getint('HRFan', 'hr_swing')
+        logging.info('Initializing HRFanController with %u bpm swing' % self._range_swing)
         self._speed_ranges = build_hr_speed_ranges(low, medium, high)
         assert len(self._speed_ranges) <= fan.max_speed + 1 # Don't have to utilize all of the fan speeds, just the one we have ranges for
         self._hrm = hrm

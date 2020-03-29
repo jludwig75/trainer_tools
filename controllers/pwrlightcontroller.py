@@ -50,6 +50,7 @@ class PowerLightController(Controller):
         self._light_strip = light_strip
         self._power_ranges = build_power_ranges(cfg.getint('Athlete', 'FTP'))
         self._range_swing = cfg.getint('PwrLEDs', 'pwr_swing')
+        logging.info('Initializing PowerLightController wiht %u FTP and %u watts swing' % (cfg.getint('Athlete', 'FTP'), self._range_swing))
         self._MIN_PWR_COLOR = 0
         self._MAX_PWR_COLOR=len(self._power_ranges) - 1
         self._power_meter.on_power_data = self.on_power_data
