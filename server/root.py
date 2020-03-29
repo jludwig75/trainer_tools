@@ -14,7 +14,7 @@ class Form(object):
             self._add_field(field)
 
     def _add_field(self, field_name):
-        print('Adding field %s' % field_name)
+        # print('Adding field %s' % field_name)
         self._field_list.append(field_name)
 
     def _field_name_to_display_name(self, field_name):

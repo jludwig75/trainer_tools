@@ -12,6 +12,11 @@ if __name__ == "__main__":
     dname = os.path.dirname(abspath)
     os.chdir(dname)
 
+    if not os.path.exists('debug'):
+        cherrypy.config.update({
+            'log.screen': False
+        })
+
     conf = {
         '/static': {
             'tools.staticdir.on': True,
@@ -20,7 +25,7 @@ if __name__ == "__main__":
         '/': {
             'tools.sessions.on': True
         }
-    }    
+    }
 
     settings = Settings()
     device_settings = DeviceSettings()

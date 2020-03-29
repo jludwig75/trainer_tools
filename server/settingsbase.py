@@ -49,14 +49,9 @@ class SettingsBase(object):
     def form_fields(self):
         fields = []
         class_functions = inspect.getmembers(self._derived_class, predicate=inspect.isfunction)
-        print(class_functions)
         for function_name, function in class_functions:
-            print(function_name, function)
-            print(hasattr(function, 'exposed'))
             if hasattr(function, 'exposed') and function_name != 'index':#method[0] != 'index' and not method[0].startswith('_'):
                 args = inspect.getargspec(function).args
-                print(args)
                 if len(args) == 2 and args[1] == function_name:
                     fields.append(function_name)
-        print(fields)
         return fields
