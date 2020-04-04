@@ -57,7 +57,7 @@ class SystemdServiceControl:
     def _mock_start(self):
         if self._running:
             return True
-        time.sleep(2)
+        time.sleep(5)
         self._running = True
         return True
 
@@ -69,6 +69,6 @@ class SystemdServiceControl:
     def _mock_stop(self):
         if not self._running:
             return True
-        time.sleep(1)
+        time.sleep(15)
         self._running = False
         return True

@@ -10,6 +10,10 @@
             function SECONDS(seconds) {
                 return seconds * MSECS_PRE_SEC;
             }
+            const SEC_PER_MINUTE = 60;
+            function MINUTES(minutes) {
+                return seconds(SEC_PER_MINUTE * minutes);
+            }
             $( function() {
               $( "#tabs" ).tabs();
             } );
@@ -63,7 +67,11 @@
                 $("#stop_service").prop('disabled', true);
                 $("#restart_service").prop('disabled', true);
             }
+            var do_service_updates = true;
             function update_service_status() {
+                if (!do_service_updates) {
+                    return;
+                }
                 $.get("/service/running", function(data) {
                     if (data == "true") {
                         on_service_running();
@@ -76,29 +84,44 @@
                 on_waiting_for_service_action("Initializing...");
                 update_service_status();
                 $("#start_service").click(function() {
+                    do_service_updates = false;
                     $('#user_message').text("");
                     on_waiting_for_service_action("Starting...");
                     $.ajax({url: "/service/start",
                             type: "PUT",
-                            success: function() {
+                            complete: function(jqXHR, status) {
+                                do_service_updates = true;
+                            },
+                            success: function(data, status, jqXHR) {
+                                do_service_updates = true;
                                 update_service_status();
                             }});
                 });
                 $("#stop_service").click(function() {
+                    do_service_updates = false;
                     $('#user_message').text("");
                     on_waiting_for_service_action("Stopping...");
                     $.ajax({url: "/service/stop",
                             type: "PUT",
-                            success: function() {
+                            complete: function(jqXHR, status) {
+                                do_service_updates = true;
+                            },
+                            success: function(data, status, jqXHR) {
+                                do_service_updates = true;
                                 update_service_status();
                             }});
                 });
                 $("#restart_service").click(function() {
+                    do_service_updates = false;
                     $('#user_message').text("");
                     on_waiting_for_service_action("Restarting...");
                     $.ajax({url: "/service/restart",
                             type: "PUT",
-                            success: function() {
+                            complete: function(jqXHR, status) {
+                                do_service_updates = true;
+                            },
+                            success: function(data, status, jqXHR) {
+                                do_service_updates = true;
                                 update_service_status();
                             }});
                 });
