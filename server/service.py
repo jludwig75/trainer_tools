@@ -1,7 +1,10 @@
 import cherrypy
+from configparser import ConfigParser
+from devices.fan import FourSpeedRealayFan
 from server.systemcontrol import SystemControl
 from server.systemd import SystemdServiceControl
 from filelock import FileLock
+import logging
 from server.common import run_cmd
 import os
 import time
@@ -14,6 +17,11 @@ class TrainerToolsService(object):
         self._hr_lock = FileLock("hr.curr.lock")
         self._pwr_lock = FileLock("pwr.curr.lock")
         self._start_scripts = {'Control Fan and Lights': 'control_fan_and_lights.py', 'HR Controlled Fan': 'hr_controlled_fan.py', 'Power Controlled Lights': 'power_controlled_lights.py'}
+        device_cfg = ConfigParser()
+        device_cfg.read('device_settings.cfg')
+
+        logging.info('Initializing fan driver')
+        self._fan = FourSpeedRealayFan(device_cfg)
 
     @cherrypy.expose
     def running(self):
@@ -105,5 +113,18 @@ class TrainerToolsService(object):
                 os.unlink('start_script')
             os.symlink(self._start_scripts[start_script], 'start_script')
             run_cmd('sudo systemctl start trainer_tools')
+        else:
+            raise cherrypy.HTTPError(405)
+
+    @cherrypy.expose
+    def fan_speed(self, speed = None):
+        if cherrypy.request.method == 'GET':
+            return str(self._fan.current_speed)
+        elif cherrypy.request.method == 'PUT':
+            speed = int(speed)
+            message = 'Setting fan speed to ' + str(speed)
+            logging.info(message)
+            self._fan.select_speed(speed)
+            return message
         else:
             raise cherrypy.HTTPError(405)

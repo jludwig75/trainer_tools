@@ -177,6 +177,27 @@
                         });
                 });
             }
+            function upate_fan_speed() {
+                $.get('/service/fan_speed', function(data) {
+                    // console.log('Settting speed to ' + data)
+                    // $('input[name="speed"]').val(data);
+                    speed=Number(data)
+                    switch(speed) {
+                        case 0:
+                            $("#fan_speed_0").prop("checked", true);
+                            break;
+                        case 1:
+                            $("#fan_speed_1").prop("checked", true);
+                            break;
+                        case 2:
+                            $("#fan_speed_2").prop("checked", true);
+                            break;
+                        case 3:
+                            $("#fan_speed_3").prop("checked", true);
+                            break;
+                    }
+                });
+            }
             function update_5_seconds() {
                 update_service_status();
             }
@@ -184,6 +205,7 @@
                 update_service_status();
                 $("#hr_curr").load("/service/hr_curr");
                 $("#pwr_curr").load("/service/pwr_curr");
+                upate_fan_speed();
             }
             function init_script_form() {
                 $("#script_curr").load("/service/start_script");
@@ -203,6 +225,63 @@
                             }
                         });
                     })
+                });
+            }
+            function fan_control_init() {
+                upate_fan_speed();
+                var set_speed_0 = function(){
+                    console.log('Setting fan speed to 0');
+                    $.ajax({
+                        url: '/service/fan_speed',
+                        type: 'PUT',
+                        data: 'speed=0'
+                    });};
+                $('#fan_speed_0').click(set_speed_0);
+                $('#label_fan_speed_0').click(function(){
+                    $("#fan_speed_0").prop("checked", true);
+                    set_speed_0();
+                });
+
+                var set_speed_1 = function(){
+                    console.log('Setting fan speed to 1');
+                    $.ajax({
+                        url: '/service/fan_speed',
+                        type: 'PUT',
+                        data: 'speed=1'
+                    });
+                };
+                $('#fan_speed_1').click(set_speed_1);
+                $('#label_fan_speed_1').click(function(){
+                    $("#fan_speed_1").prop("checked", true);
+                    set_speed_1();
+                });
+
+                var set_speed_2 = function(){
+                    console.log('Setting fan speed to 2');
+                    $.ajax({
+                        url: '/service/fan_speed',
+                        type: 'PUT',
+                        data: 'speed=2'
+                    });
+                };
+                $('#fan_speed_2').click(set_speed_2);
+                $('#label_fan_speed_2').click(function(){
+                    $("#fan_speed_2").prop("checked", true);
+                    set_speed_2();
+                });
+
+                var set_speed_3 = function(){
+                    console.log('Setting fan speed to 3');
+                    $.ajax({
+                        url: '/service/fan_speed',
+                        type: 'PUT',
+                        data: 'speed=3'
+                    });
+                };
+                $('#fan_speed_3').click(set_speed_3);
+                $('#label_fan_speed_3').click(function(){
+                    $("#fan_speed_3").prop("checked", true);
+                    set_speed_3();
                 });
             }
             $(document).ready(function(){
@@ -225,6 +304,7 @@
                 });
                 service_buttons_init();
                 system_buttons_init();
+                fan_control_init();
                 setInterval(update_5_seconds, SECONDS(5));
                 setInterval(update_1_second, SECONDS(1));
             });
@@ -266,6 +346,19 @@
                 </div>
                 <div class="field_item">
                     <span class="stat_heading">Watts: </span><span id="pwr_curr">--</span>
+                </div>
+                <h2>Fan Speed</h2>
+                <div class="field_item">
+                    <form action="/service/fan_speed">
+                        <input type="radio" id="fan_speed_0" name="speed", value="0">
+                        <label for="0" id="label_fan_speed_0">Off</label>
+                        <input type="radio" id="fan_speed_1" name="speed", value="1">
+                        <label for="1" id="label_fan_speed_1">Low</label>
+                        <input type="radio" id="fan_speed_2" name="speed", value="2">
+                        <label for="2" id="label_fan_speed_2">Medium</label>
+                        <input type="radio" id="fan_speed_3" name="speed", value="3">
+                        <label for="3" id="label_fan_speed_3">High</label>
+                    </form>
                 </div>
             </div>
             <div id="tabs-2">
