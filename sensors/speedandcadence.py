@@ -43,9 +43,11 @@
 from __future__ import absolute_import, print_function
 
 import time
+import sys
 from sensors.internal import sub_u16
 import logging
 from sensors.internal import dump_data
+from sensors.dumper import logger
 
 
 ANT_PLUS_FREQUENCY=57
@@ -76,11 +78,15 @@ class AntPlusSpeedAndCadenceSensor:
         self._wheel_circumference = wheel_circumference_meters
 
     def _on_data(self, data):
-        logging.debug('Speed and cadence sensor received data %s' % dump_data(data))
+        logger.log_data(time.time(), SPEED_AND_CADENCE_SENSOR_DEVICE_TYPE, data)
+        # logging.debug('Speed and cadence sensor received data %s' % dump_data(data))
         ts_speed = (data[5] << 8) | data[4]
         wheel_revolution_count = (data[7] << 8) | data[6]
         ts_cadence = (data[1] << 8) | data[0]
         crank_revolution_count = (data[3] << 8) | data[2]
+        print('{},,{},{},{},{}'.format(time.time(), ts_speed, wheel_revolution_count, ts_cadence, crank_revolution_count))
+        sys.stdout.flush()
+
         if self._last_speed_data != None and ts_speed != self._last_speed_data[TIME_IDX]:
             # Handle wrapping for 16-bits, otherwise, this value will be wildly off every 64 seconds or 64K revolutions (~138 km on 700x25C)
             self._last_speed = self._wheel_circumference * 1024.0 * float(sub_u16(wheel_revolution_count, self._last_speed_data[REV_IDX])) / float(sub_u16(ts_speed, self._last_speed_data[TIME_IDX]))

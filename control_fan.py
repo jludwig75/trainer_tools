@@ -47,4 +47,6 @@ fan.select_speed(args.speed)
 
 logging.info('Press Ctrl-C to quit')
 while True:
+    logging.info('setting fan speed to %u' % args.speed)
+    fan.select_speed(args.speed)
     time.sleep(1)

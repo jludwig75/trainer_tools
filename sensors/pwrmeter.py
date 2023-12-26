@@ -44,8 +44,10 @@ from __future__ import absolute_import, print_function
 
 import time
 import logging
+import sys
 from sensors.internal import dump_data
 from filelock import FileLock
+from sensors.dumper import logger
 
 
 ANT_PLUS_FREQUENCY=57
@@ -69,9 +71,12 @@ class AntPlusPowerMeter:
         self._lock = FileLock("pwr.curr.lock")
     
     def _on_data(self, data):
+        logger.log_data(time.time(), PWR_METER_DEVICE_TYPE, data)
         logging.debug('Power meter received data %s' % dump_data(data))
         if data[0] == 0x10:
             self._last_pwr = (int(data[7]) << 8) | int(data[6])
+            print('{},{}'.format(time.time(), self._last_pwr))
+            sys.stdout.flush()
             self._last_pwr_time = time.time()
             if self.on_power_data != None:
                 self.on_power_data(self._last_pwr, data)

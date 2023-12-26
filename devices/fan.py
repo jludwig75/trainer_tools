@@ -54,6 +54,7 @@ class FourSpeedRealayFan:
             # No change
             return
         assert speed >= 0 and speed <= 3
+        print('setting fan speed to %u' % speed)
         logging.info('setting fan speed to %u' % speed)
         if speed == 0:
             GPIO.output(self._pin3, self.OFF)
